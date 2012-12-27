@@ -1,6 +1,6 @@
 package histogram
 
-/* histogram/copy.go
+/* copy.go
  * Copyright (C) 2000  Simone Piccardi
  *
  * This library is free software; you can redistribute it and/or
@@ -33,8 +33,8 @@ import (
 	"errors"
 )
 
-// Copy the contents of an Histogram into another
-func Copy(dest, src *Histogram) error {
+// Copy the contents of Histogram src into dest 
+func (src *Histogram) Copy(dest *Histogram) error {
 	if len(dest.Bin) != len(src.Bin) {
 		return errors.New("histograms have different sizes, cannot copy")
 	}
@@ -46,7 +46,7 @@ func Copy(dest, src *Histogram) error {
 }
 
 // Clone an Histogram creating an identical new one
-func Clone(src *Histogram) (clone *Histogram, err error) {
+func (src *Histogram) Clone(clone *Histogram, err error) {
 	clone, err = NewHistogramRange(src.Range)
 
 	if err != nil {

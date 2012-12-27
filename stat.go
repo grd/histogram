@@ -47,7 +47,7 @@ import (
 // W(n) = W(n-1) + w(n)
 //
 func (h *Histogram) Mean() float64 {
-	n := len(h.Bin)
+	n := h.Len()
 
 	// wmean and W should be "long double" instead of float64 (so Float128 ?)
 	var wmean, W float64
@@ -66,7 +66,7 @@ func (h *Histogram) Mean() float64 {
 }
 
 func (h *Histogram) Sigma() float64 {
-	n := len(h.Bin)
+	n := h.Len()
 
 	// long double wvariance, wmean and W ... Float128 ?
 	var wvariance, wmean, W float64

@@ -1,6 +1,6 @@
 package histogram
 
-/* histogram/oper.go
+/* oper.go
  * Copyright (C) 2000  Simone Piccardi
  *
  * This library is free software; you can redistribute it and/or
@@ -40,8 +40,8 @@ import (
 	"log"
 )
 
-// EqualBins control if two histograms have the same.Binning
-func EqualBins(h1, h2 *Histogram) bool {
+// EqualBins control if two histograms have the same binning
+func (h1 *Histogram) EqualBins(h2 *Histogram) bool {
 	if len(h1.Range) != len(h2.Range) {
 		return false
 	}
