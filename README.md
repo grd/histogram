@@ -2,7 +2,7 @@
 
 ***Work in progress !***
 
-Pure [Go](http://www.golang.org) implementation of the [GSL Histogram library](http://www.gnu.org/software/gsl/manual/html_node/Histogram.html).
+Pure [Go](http://www.golang.org) implementation of the [GSL Histogram library](http://www.gnu.org/software/gsl/manual/html_node/Histograms.html).
 
 For the API overview see [Godoc](http://godoc.org/github.com/grd/histogram).
 

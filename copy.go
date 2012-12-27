@@ -46,14 +46,14 @@ func Copy(dest, src *Histogram) error {
 }
 
 // Clone an Histogram creating an identical new one
-func Clone(src *Histogram) (*Histogram, error) {
-	h, err := NewHistogramRange(src.Range)
+func Clone(src *Histogram) (clone *Histogram, err error) {
+	clone, err = NewHistogramRange(src.Range)
 
 	if err != nil {
 		return nil, errors.New("failed to allocate space for histogram struct")
 	}
 
-	copy(h.Bin, src.Bin)
+	copy(clone.Bin, src.Bin)
 
-	return h, nil
+	return
 }
