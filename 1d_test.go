@@ -1,0 +1,424 @@
+package histogram
+
+/* histogram/1d_test.go
+ * 
+ * Copyright (C) 1996, 1997, 1998, 1999, 2000 Brian Gough
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ */
+
+import (
+	"fmt"
+	"io"
+	"os"
+	"testing"
+)
+
+const N = 397
+const NR = 10
+
+func Test_1d(t *testing.T) {
+	xr := []float64{0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
+
+	h, err := NewHistogramIncr(N)
+	if err != nil {
+		t.Error(err)
+	}
+
+	h1, err := NewHistogramIncr(N)
+	if err != nil {
+		t.Error(err)
+	}
+
+	g, err := NewHistogramIncr(N)
+	if err != nil {
+		t.Error(err)
+	}
+
+	gsl_test(h.Range == nil, "NewHistogramIncr returns valid Range pointer")
+	gsl_test(h.Bin == nil, "NewHistogramIncr returns valid.Bin pointer")
+
+	hr, err := NewHistogramRange(xr)
+	if err != nil {
+		t.Error(err)
+	}
+
+	gsl_test(hr.Range == nil, "NewHistogramIncr returns valid Range pointer")
+	gsl_test(hr.Bin == nil, "NewHistogramIncr returns valid.Bin pointer")
+
+	{
+		for i := 0; i <= NR; i++ {
+			if hr.Range[i] != xr[i] {
+				t.Error("NewHistogramRange creates range")
+
+			}
+		}
+	}
+
+	{
+		err := hr.SetRanges(xr)
+		if err != nil {
+			t.Error(err)
+		}
+
+		for i := range hr.Range {
+			if hr.Range[i] != xr[i] {
+				t.Error("Histogram.SetRange sets range")
+			}
+		}
+	}
+
+	for i := 0; i < N; i++ {
+		err := h.Accumulate(float64(i), float64(i))
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	{
+		for i := 0; i < N; i++ {
+			if h.Bin[i] != float64(i) {
+				t.Fatal("Histogram.Accumulate writes into array")
+			}
+		}
+	}
+
+	{
+		for i := 0; i < N; i++ {
+			if h.Get(i) != float64(i) {
+				t.Fatal("Histogram.Get reads from array")
+			}
+		}
+	}
+
+	for i := 0; i <= N; i++ {
+		h1.Range[i] = 100.0 + float64(i)
+	}
+
+	err = Copy(h1, h)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	{
+		for i := 0; i <= N; i++ {
+			if h1.Range[i] != h.Range[i] {
+				t.Fatal("Histogram.Copy copies.Bin Ranges")
+			}
+		}
+	}
+
+	{
+		for i := 0; i < N; i++ {
+			if h1.Get(i) != h.Get(i) {
+				t.Fatal("Histogram.Copy copies.Bin values")
+			}
+		}
+	}
+
+	// New memory allocation for h1
+	h1, err = Clone(h)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	{
+		for i := 0; i <= N; i++ {
+			if h1.Range[i] != h.Range[i] {
+				t.Fatal("Histogram.Clone copies.Bin Ranges")
+			}
+		}
+	}
+
+	{
+		for i := 0; i < N; i++ {
+			if h1.Get(i) != h.Get(i) {
+				t.Fatal("Histogram.Clone copies.Bin values")
+			}
+		}
+	}
+
+	h.Reset()
+
+	{
+		for i := 0; i < N; i++ {
+			if h.Bin[i] != 0 {
+				t.Fatal("Histogram.Reset zeros array")
+			}
+		}
+	}
+
+	{
+		for i := 0; i < N; i++ {
+			h.Increment(float64(i))
+
+			for j := 0; j <= i; j++ {
+				if h.Bin[j] != 1 {
+					t.Fatal("Histogram.Increment increases.Bin value")
+				}
+			}
+
+			for j := i + 1; j < N; j++ {
+				if h.Bin[j] != 0 {
+					t.Fatal("Histogram.Increment increases.Bin value")
+				}
+			}
+		}
+	}
+
+	{
+		for i := 0; i < N; i++ {
+			x0, x1 := h.GetRange(i)
+
+			if x0 != float64(i) || x1 != float64(i+1) {
+				t.Fatal("Histogram.GetRange returns Range")
+			}
+		}
+	}
+
+	{
+		if h.Max() != N {
+			t.Fatal("Histogram.Max returns maximum")
+		}
+	}
+
+	{
+		if h.Min() != 0 {
+			t.Fatal("Histogram.Min returns minimum")
+		}
+	}
+
+	{
+		if h.Bins() != N {
+			t.Fatal("Histogram.Bins returns number of.Bins")
+		}
+	}
+
+	h.Bin[2] = 123456.0
+	h.Bin[4] = -654321
+
+	{
+		max := h.MaxVal()
+		gsl_test(max != 123456.0, "Histogram.MaxVal finds maximum value")
+	}
+
+	{
+		min := h.MinVal()
+		gsl_test(min != -654321.0, "Histogram.MinVal finds minimum value")
+	}
+
+	{
+		imax := h.MaxBin()
+		gsl_test(imax != 2, "Histogram.MaxBin finds maximum value.Bin")
+	}
+
+	{
+		imin := h.MinBin()
+		gsl_test(imin != 4, "Histogram.MinBin find minimum value.Bin")
+	}
+
+	for i := 0; i < N; i++ {
+		h.Bin[i] = float64(i + 27)
+		g.Bin[i] = float64((i + 27) * (i + 1))
+	}
+
+	{
+		Sum := h.Sum()
+		gsl_test(Sum != N*27+((N-1)*N)/2, "Histogram.Sum Sums all.Bin values")
+	}
+
+	Copy(h1, g)
+	h1.Add(h)
+
+	{
+		var status bool
+		for i := 0; i < N; i++ {
+			if h1.Bin[i] != g.Bin[i]+h.Bin[i] {
+				status = true
+			}
+		}
+		gsl_test(status, "Histogram.Add histogram addition")
+	}
+
+	Copy(h1, g)
+	h1.Sub(h)
+
+	{
+		var status bool
+		for i := 0; i < N; i++ {
+			if h1.Bin[i] != g.Bin[i]-h.Bin[i] {
+				status = true
+			}
+		}
+		gsl_test(status, "Histogram.Sub histogram subtraction")
+	}
+
+	Copy(h1, g)
+	h1.Mul(h)
+
+	{
+		var status bool
+		for i := 0; i < N; i++ {
+			if h1.Bin[i] != g.Bin[i]*h.Bin[i] {
+				status = true
+			}
+		}
+		gsl_test(status, "Histogram.Mul histogram multiplication")
+	}
+
+	Copy(h1, g)
+	h1.Div(h)
+
+	{
+		var status bool
+		for i := 0; i < N; i++ {
+			if h1.Bin[i] != g.Bin[i]/h.Bin[i] {
+				status = true
+			}
+		}
+		gsl_test(status, "Histogram.Div histogram division")
+	}
+
+	Copy(h1, g)
+	h1.Scale(0.5)
+
+	{
+		var status bool
+		for i := 0; i < N; i++ {
+			if h1.Bin[i] != 0.5*g.Bin[i] {
+				status = true
+			}
+		}
+		gsl_test(status, "Histogram.Scale histogram scaling")
+	}
+
+	Copy(h1, g)
+	h1.Shift(0.25)
+
+	{
+		var status bool
+		for i := 0; i < N; i++ {
+			if h1.Bin[i] != 0.25+g.Bin[i] {
+				status = true
+			}
+		}
+		gsl_test(status, "Histogram.Shift histogram shift")
+	}
+
+	//  Reallocate h
+
+	h, err = NewHistogramUniform(N, 0.0, 1.0)
+
+	gsl_test(h.Range == nil,
+		"NewHistogramUniform returns valid Range pointer")
+	gsl_test(h.Bin == nil,
+		"NewHistogramUniform returns valid.Bin pointer")
+
+	h.Accumulate(0.0, 1.0)
+	h.Accumulate(0.1, 2.0)
+	h.Accumulate(0.2, 3.0)
+	h.Accumulate(0.3, 4.0)
+
+	{
+		var expected float64
+		var status bool
+		i1, _ := h.Find(0.0)
+		i2, _ := h.Find(0.1)
+		i3, _ := h.Find(0.2)
+		i4, _ := h.Find(0.3)
+
+		for i := 0; i < N; i++ {
+			if i == i1 {
+				expected = 1.0
+			} else if i == i2 {
+				expected = 2.0
+			} else if i == i3 {
+				expected = 3.0
+			} else if i == i4 {
+				expected = 4.0
+			} else {
+				expected = 0.0
+			}
+
+			if h.Bin[i] != expected {
+				status = true
+			}
+		}
+		gsl_test(status, "Histogram.Find returns index")
+	}
+
+	{
+		f, _ := os.Create("test.txt")
+		_, err = fmt.Fprint(f, h)
+		f.Close()
+	}
+
+	{
+		f, _ := os.Open("test.txt")
+		hh, _ := NewHistogramIncr(N)
+		var status bool
+
+		fmt.Fscan(f, hh)
+
+		for i := 0; i < N; i++ {
+			if h.Range[i] != hh.Range[i] {
+				status = true
+			}
+			if h.Bin[i] != hh.Bin[i] {
+				status = true
+			}
+		}
+		if h.Range[N] != hh.Range[N] {
+			status = true
+		}
+
+		gsl_test(status, "gsl_histogram_fprintf and fscanf")
+
+		f.Close()
+	}
+
+	{
+		f, _ := os.Create("test.dat")
+		_, err := io.Copy(f, h)
+		if err != nil {
+			t.Fatal(err)
+		}
+		f.Close()
+	}
+
+	{
+		f, _ := os.Open("test.dat")
+		hh, _ := NewHistogramIncr(N)
+		var status bool
+
+		io.Copy(hh, f)
+
+		for i := 0; i < N; i++ {
+			if h.Range[i] != hh.Range[i] {
+				status = true
+			}
+			if h.Bin[i] != hh.Bin[i] {
+				status = true
+			}
+		}
+		if h.Range[N] != hh.Range[N] {
+			status = true
+		}
+
+		gsl_test(status, "gsl_histogram_fwrite and fread")
+
+		f.Close()
+	}
+}

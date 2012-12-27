@@ -1,0 +1,11 @@
+* find.go : Generate clear error output for find func when value outside range
+* more uniform error handling. Make a descision about what method to use.
+  e.g. log.Fatal / errors.New
+* stat.go : Mean() and Sigma() expects long double. Maybe we should Float128 for this.
+* file.go : Output of String func too much detail
+* testing : Faulty Increments (4 pcs). See output. This is a rounding error.
+* 2d hist : Add complete 2d histogram functionality
+
+Done:
+* file.go : Error checks on Read and Write methods
+* init.go : I think func make_uniform can have a simpler calculation method.
