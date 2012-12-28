@@ -1,6 +1,6 @@
 package histogram
 
-/* histogram/add.go
+/* add.go
  * 
  * Copyright (C) 1996, 1997, 1998, 1999, 2000 Brian Gough
  * 

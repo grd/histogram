@@ -1,6 +1,6 @@
 package histogram
 
-/* histogram/main_test.go
+/* main_test.go
  * 
  * Copyright (C) 1996, 1997, 1998, 1999, 2000 Brian Gough
  * 
@@ -24,6 +24,11 @@ import (
 	"math"
 	"os"
 )
+
+//
+// The functions defined in this file are helper functions, 
+// not the actual tests.
+//
 
 func gsl_test(status bool, test_description string, a ...interface{}) {
 
@@ -56,4 +61,11 @@ func gsl_test_rel(result, expected, relative_error float64, test_description str
 			s, result, expected)
 		os.Exit(1)
 	}
+}
+
+var x uint32 = 1
+
+func urand() float64 {
+	x = (1103515245*x + 12345) & 0x7fffffff
+	return float64(x) / 2147483648.0
 }

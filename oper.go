@@ -20,13 +20,6 @@ package histogram
  * Boston, MA 02111-1307, USA.
  */
 
-//
-// Routines to make operations on histograms. 
-//
-// Author: S. Piccardi
-// Jan. 2000
-//
-
 import (
 	"errors"
 )

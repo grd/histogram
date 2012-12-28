@@ -1,6 +1,6 @@
 package histogram
 
-/* histogram/urand.go
+/* histogram2d.go
  * 
  * Copyright (C) 1996, 1997, 1998, 1999, 2000 Brian Gough
  * 
@@ -19,9 +19,14 @@ package histogram
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-var x uint32 = 1
+type Histogram2d struct {
+	Xrange []float64
+	Yrange []float64
+	Bin    []float64
+}
 
-func urand() float64 {
-	x = (1103515245*x + 12345) & 0x7fffffff
-	return float64(x) / 2147483648.0
+type Pdf2d struct {
+	Xrange []float64
+	Yrange []float64
+	Sum    []float64
 }

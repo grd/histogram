@@ -1,6 +1,6 @@
 package histogram
 
-/* histogram/file.go
+/* file.go
  * 
  * Copyright (C) 1996, 1997, 1998, 1999, 2000 Brian Gough
  * 
@@ -27,6 +27,8 @@ import (
 	"math"
 )
 
+// Read function corresponds with io.Reader.
+// The data is binary.
 func (h *Histogram) Read(data []byte) (n int, err error) {
 	if len(data) < (len(h.Range)+len(h.Bin))*8 {
 		return 0, io.ErrShortBuffer
@@ -43,6 +45,8 @@ func (h *Histogram) Read(data []byte) (n int, err error) {
 	return n, io.EOF
 }
 
+// Write function corresponds with io.Writer.
+// The data is binary.
 func (h *Histogram) Write(data []byte) (n int, err error) {
 	for i := range h.Range {
 		val, num := binary.Uvarint(data[n:])
@@ -65,15 +69,23 @@ func (h *Histogram) Write(data []byte) (n int, err error) {
 	return n, io.EOF
 }
 
+// FormatString is used by the String and Scan functions for data parsing.
+var FormatString = "%.19e %.19e %.19e\n"
+
+// String function corresponds with fmt.Stringer.
+// String uses the variabele FormatString for the data parsing
+// (which is plain text).
 func (h *Histogram) String() (res string) {
 	for i := range h.Bin {
-		str := fmt.Sprintf("%.19e %.19e %.19e\n", h.Range[i], h.Range[i+1], h.Bin[i])
-		// str := fmt.Sprintf("%f %f %f\n", h.Range[i], h.Range[i+1], h.Bin[i])
+		str := fmt.Sprintf(FormatString, h.Range[i], h.Range[i+1], h.Bin[i])
 		res += str
 	}
 	return
 }
 
+// Scan function corresponds with fmt.Scanner. 
+// Scan uses the variabele FormatString for the data parsing
+// (which is plain text).
 func (h *Histogram) Scan(s fmt.ScanState, ch rune) (err error) {
 	var buf bytes.Buffer
 
@@ -91,7 +103,7 @@ func (h *Histogram) Scan(s fmt.ScanState, ch rune) (err error) {
 			buf.WriteRune(ch)
 		}
 		str, _ := buf.ReadString('\n')
-		n, _ := fmt.Sscanf(str, "%f %f %f", &h.Range[i], &h.Range[i+1], &h.Bin[i])
+		n, _ := fmt.Sscanf(str, FormatString, &h.Range[i], &h.Range[i+1], &h.Bin[i])
 
 		if n < 3 {
 			return io.ErrUnexpectedEOF

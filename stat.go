@@ -1,6 +1,6 @@
 package histogram
 
-/* histogram/stat.go
+/* stat.go
  * Copyright (C) 2000  Simone Piccardi
  *
  * This library is free software; you can redistribute it and/or
@@ -18,19 +18,6 @@ package histogram
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
-/***************************************************************
- *
- * File gsl_histogram_stat.c: 
- * Routines for statisticalcomputations on histograms. 
- * Need GSL library and header.
- * Contains the routines:
- * gsl_histogram_mean    compute histogram mean
- * gsl_histogram_sigma   compute histogram sigma
- *
- * Author: S. Piccardi
- * Jan. 2000
- *
- ***************************************************************/
 
 // FIXME: We skip negative values in the histogram h.Bin[i] < 0,
 // since those correspond to negative weights (BJG)
@@ -39,13 +26,7 @@ import (
 	"math"
 )
 
-//
-// Mean compute the.Bin-weighted arithmetic mean M of a histogram using the
-// recurrence relation
-//
-// M(n) = M(n-1) + (x[n] - M(n-1)) (w(n)/(W(n-1) + w(n))) 
-// W(n) = W(n-1) + w(n)
-//
+// Mean compute the bin-weighted arithmetic mean of the histogram
 func (h *Histogram) Mean() float64 {
 	n := h.Len()
 
@@ -65,6 +46,7 @@ func (h *Histogram) Mean() float64 {
 	return wmean
 }
 
+// Sigma compute the bin-weighted sigma of the histogram
 func (h *Histogram) Sigma() float64 {
 	n := h.Len()
 
@@ -106,7 +88,7 @@ func (h *Histogram) Sigma() float64 {
 	return sigma
 }
 
-// Sum up all.Bins of histogram
+// Sum up all bins of the histogram
 func (h *Histogram) Sum() (res float64) {
 	for i := range h.Bin {
 		res += h.Bin[i]

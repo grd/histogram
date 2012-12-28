@@ -1,6 +1,6 @@
 package histogram
 
-/* histogram/params.go
+/* params.go
  * 
  * Copyright (C) 1996, 1997, 1998, 1999, 2000 Brian Gough
  * 
@@ -27,6 +27,7 @@ func (h *Histogram) Min() float64 {
 	return h.Range[0]
 }
 
+// Len returns the number of bins
 func (h *Histogram) Len() int {
 	return len(h.Bin)
 }

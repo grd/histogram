@@ -20,13 +20,6 @@ package histogram
  * Boston, MA 02111-1307, USA.
  */
 
-//
-// Routines to find maximum and minumum content of a histogram. 
-//
-// Author: S. Piccardi
-// Jan. 2000
-//
-
 // MaxVal find max content values
 func (h *Histogram) MaxVal() float64 {
 	max := h.Bin[0]

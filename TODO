@@ -5,6 +5,7 @@
 * file.go : Output of String func too much detail
 * testing : Faulty Increments (4 pcs). See output. This is a rounding error.
 * 2d hist : Add complete 2d histogram functionality
+* testing : Place all tests in 3 files: main_test.go, main1d_test.go and main2d_test.go
 
 Done:
 * file.go : Error checks on Read and Write methods

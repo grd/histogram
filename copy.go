@@ -1,6 +1,7 @@
 package histogram
 
 /* copy.go
+ *
  * Copyright (C) 2000  Simone Piccardi
  *
  * This library is free software; you can redistribute it and/or
@@ -18,16 +19,6 @@ package histogram
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
-/***************************************************************
- *
- * File gsl_histogram_copy.c: 
- * Routine to copy an histogram. 
- * Need GSL library and headers.
- *
- * Author: S. Piccardi
- * Jan. 2000
- *
- ***************************************************************/
 
 import (
 	"errors"
