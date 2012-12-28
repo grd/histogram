@@ -19,7 +19,7 @@ package histogram
  * Boston, MA 02111-1307, USA.
  */
 
-// FIXME: We skip negative values in the histogram h.Bin[i] < 0,
+// FIXME: We skip negative values in the histogram h.bin[i] < 0,
 // since those correspond to negative weights (BJG)
 
 import (
@@ -34,8 +34,8 @@ func (h *Histogram) Mean() float64 {
 	var wmean, W float64
 
 	for i := 0; i < n; i++ {
-		xi := (h.Range[i+1] + h.Range[i]) / 2
-		wi := h.Bin[i]
+		xi := (h.range_[i+1] + h.range_[i]) / 2
+		wi := h.bin[i]
 
 		if wi > 0 {
 			W += wi
@@ -59,8 +59,8 @@ func (h *Histogram) Sigma() float64 {
 	// Compute the mean
 
 	for i := 0; i < n; i++ {
-		xi := (h.Range[i+1] + h.Range[i]) / 2
-		wi := h.Bin[i]
+		xi := (h.range_[i+1] + h.range_[i]) / 2
+		wi := h.bin[i]
 
 		if wi > 0 {
 			W += wi
@@ -73,8 +73,8 @@ func (h *Histogram) Sigma() float64 {
 	W = 0.0
 
 	for i := 0; i < n; i++ {
-		xi := ((h.Range[i+1]) + (h.Range[i])) / 2
-		wi := h.Bin[i]
+		xi := ((h.range_[i+1]) + (h.range_[i])) / 2
+		wi := h.bin[i]
 
 		if wi > 0 {
 			// long double delta... Float128 ?
@@ -90,8 +90,8 @@ func (h *Histogram) Sigma() float64 {
 
 // Sum up all bins of the histogram
 func (h *Histogram) Sum() (res float64) {
-	for i := range h.Bin {
-		res += h.Bin[i]
+	for i := range h.bin {
+		res += h.bin[i]
 	}
 	return
 }

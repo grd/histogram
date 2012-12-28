@@ -28,12 +28,12 @@ var difBinErr = errors.New("histograms have different binning")
 
 // EqualBins control if two histograms have the same binning
 func (h1 *Histogram) EqualBins(h2 *Histogram) bool {
-	if len(h1.Range) != len(h2.Range) {
+	if len(h1.range_) != len(h2.range_) {
 		return false
 	}
 
-	for i := range h1.Range {
-		if h1.Range[i] != h2.Range[i] {
+	for i := range h1.range_ {
+		if h1.range_[i] != h2.range_[i] {
 			return false
 		}
 	}
@@ -47,8 +47,8 @@ func (h1 *Histogram) Add(h2 *Histogram) error {
 		return difBinErr
 	}
 
-	for i := range h1.Bin {
-		h1.Bin[i] += h2.Bin[i]
+	for i := range h1.bin {
+		h1.bin[i] += h2.bin[i]
 	}
 	return nil
 }
@@ -59,8 +59,8 @@ func (h1 *Histogram) Sub(h2 *Histogram) error {
 		return difBinErr
 	}
 
-	for i := range h1.Bin {
-		h1.Bin[i] -= h2.Bin[i]
+	for i := range h1.bin {
+		h1.bin[i] -= h2.bin[i]
 	}
 	return nil
 }
@@ -71,8 +71,8 @@ func (h1 *Histogram) Mul(h2 *Histogram) error {
 		return difBinErr
 	}
 
-	for i := range h1.Bin {
-		h1.Bin[i] *= h2.Bin[i]
+	for i := range h1.bin {
+		h1.bin[i] *= h2.bin[i]
 	}
 	return nil
 }
@@ -83,22 +83,22 @@ func (h1 *Histogram) Div(h2 *Histogram) error {
 		return difBinErr
 	}
 
-	for i := range h1.Bin {
-		h1.Bin[i] /= h2.Bin[i]
+	for i := range h1.bin {
+		h1.bin[i] /= h2.bin[i]
 	}
 	return nil
 }
 
 // Scale a histogram by a numeric factor 
 func (h *Histogram) Scale(scale float64) {
-	for i := range h.Bin {
-		h.Bin[i] *= scale
+	for i := range h.bin {
+		h.bin[i] *= scale
 	}
 }
 
 // Shift a histogram by a numeric offset 
 func (h *Histogram) Shift(shift float64) {
-	for i := range h.Bin {
-		h.Bin[i] += shift
+	for i := range h.bin {
+		h.bin[i] += shift
 	}
 }

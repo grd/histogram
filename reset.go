@@ -20,7 +20,7 @@ package histogram
  */
 
 func (h *Histogram) Reset() {
-	for i := range h.Bin {
-		h.Bin[i] = 0
+	for i := range h.bin {
+		h.bin[i] = 0
 	}
 }

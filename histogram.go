@@ -20,12 +20,12 @@ package histogram
  */
 
 type Histogram struct {
-	Range []float64
-	Bin   []float64
+	range_ []float64
+	bin    []float64
 }
 
 // Probability distribution function
 type Pdf struct {
-	Range []float64
-	Sum   []float64
+	range_ []float64
+	sum    []float64
 }

@@ -22,10 +22,10 @@ package histogram
 
 // MaxVal find max content values
 func (h *Histogram) MaxVal() float64 {
-	max := h.Bin[0]
-	for i := range h.Bin {
-		if h.Bin[i] > max {
-			max = h.Bin[i]
+	max := h.bin[0]
+	for i := range h.bin {
+		if h.bin[i] > max {
+			max = h.bin[i]
 		}
 	}
 	return max
@@ -34,10 +34,10 @@ func (h *Histogram) MaxVal() float64 {
 // MaxBin find index of max contents in bins
 func (h *Histogram) MaxBin() int {
 	var imax int
-	max := h.Bin[0]
-	for i := range h.Bin {
-		if h.Bin[i] > max {
-			max = h.Bin[i]
+	max := h.bin[0]
+	for i := range h.bin {
+		if h.bin[i] > max {
+			max = h.bin[i]
 			imax = i
 		}
 	}
@@ -46,10 +46,10 @@ func (h *Histogram) MaxBin() int {
 
 // MinVal find min content values
 func (h *Histogram) MinVal() float64 {
-	min := h.Bin[0]
-	for i := range h.Bin {
-		if h.Bin[i] < min {
-			min = h.Bin[i]
+	min := h.bin[0]
+	for i := range h.bin {
+		if h.bin[i] < min {
+			min = h.bin[i]
 		}
 	}
 	return min
@@ -58,10 +58,10 @@ func (h *Histogram) MinVal() float64 {
 // MinBin find index of min contents in bins
 func (h *Histogram) MinBin() int {
 	var imin int
-	min := h.Bin[0]
-	for i := range h.Bin {
-		if h.Bin[i] < min {
-			min = h.Bin[i]
+	min := h.bin[0]
+	for i := range h.bin {
+		if h.bin[i] < min {
+			min = h.bin[i]
 			imin = i
 		}
 	}

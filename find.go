@@ -45,7 +45,7 @@ func find(Range []float64, x float64) (int, error) {
 		return i, nil
 	}
 
-	// perform.Binary search
+	// perform.binary search
 
 	upper = n
 	lower = 0

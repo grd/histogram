@@ -26,25 +26,25 @@ import (
 
 // Copy the contents of Histogram src into dest 
 func (src *Histogram) Copy(dest *Histogram) error {
-	if len(dest.Bin) != len(src.Bin) {
+	if len(dest.bin) != len(src.bin) {
 		return errors.New("histograms have different sizes, cannot copy")
 	}
 
-	copy(dest.Range, src.Range)
-	copy(dest.Bin, src.Bin)
+	copy(dest.range_, src.range_)
+	copy(dest.bin, src.bin)
 
 	return nil
 }
 
 // Clone an Histogram creating an identical new one
 func (src *Histogram) Clone() (clone *Histogram, err error) {
-	clone, err = NewHistogramRange(src.Range)
+	clone, err = NewHistogramRange(src.range_)
 
 	if err != nil {
 		return nil, errors.New("failed to allocate space for histogram struct")
 	}
 
-	copy(clone.Bin, src.Bin)
+	copy(clone.bin, src.bin)
 
 	return
 }

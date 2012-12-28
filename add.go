@@ -28,8 +28,8 @@ func (h *Histogram) Increment(x float64) error {
 }
 
 func (h *Histogram) Accumulate(x, weight float64) error {
-	n := len(h.Bin)
-	index, err := find(h.Range, x)
+	n := len(h.bin)
+	index, err := find(h.range_, x)
 
 	if err != nil {
 		return err
@@ -39,7 +39,7 @@ func (h *Histogram) Accumulate(x, weight float64) error {
 		return errors.New("index lies outside valid Range of 0 .. n - 1")
 	}
 
-	h.Bin[index] += weight
+	h.bin[index] += weight
 
 	return nil
 }

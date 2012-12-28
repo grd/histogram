@@ -20,14 +20,14 @@ package histogram
  */
 
 func (h *Histogram) Max() float64 {
-	return h.Range[len(h.Range)-1]
+	return h.range_[len(h.range_)-1]
 }
 
 func (h *Histogram) Min() float64 {
-	return h.Range[0]
+	return h.range_[0]
 }
 
 // Len returns the number of bins
 func (h *Histogram) Len() int {
-	return len(h.Bin)
+	return len(h.bin)
 }

@@ -26,24 +26,24 @@ import (
 var indexErr = "Error: index out of range. %v <> [0..%v]"
 
 func (h *Histogram) Get(i int) float64 {
-	if i < 0 || i >= len(h.Bin) {
-		log.Fatalf(indexErr, i, len(h.Bin)-1)
+	if i < 0 || i >= len(h.bin) {
+		log.Fatalf(indexErr, i, len(h.bin)-1)
 	}
 
-	return h.Bin[i]
+	return h.bin[i]
 }
 
 func (h *Histogram) GetRange(i int) (lower, upper float64) {
-	if i < 0 || i >= len(h.Bin) {
-		log.Fatalf(indexErr, i, len(h.Bin)-1)
+	if i < 0 || i >= len(h.bin) {
+		log.Fatalf(indexErr, i, len(h.bin)-1)
 	}
 
-	lower = h.Range[i]
-	upper = h.Range[i+1]
+	lower = h.range_[i]
+	upper = h.range_[i+1]
 
 	return
 }
 
 func (h *Histogram) Find(x float64) (int, error) {
-	return find(h.Range, x)
+	return find(h.range_, x)
 }

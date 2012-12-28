@@ -48,20 +48,20 @@ func Test_1d(t *testing.T) {
 		t.Error(err)
 	}
 
-	gsl_test(h.Range == nil, "NewHistogramIncr returns valid Range pointer")
-	gsl_test(h.Bin == nil, "NewHistogramIncr returns valid.Bin pointer")
+	gsl_test(h.range_ == nil, "NewHistogramIncr returns valid range pointer")
+	gsl_test(h.bin == nil, "NewHistogramIncr returns valid bin pointer")
 
 	hr, err := NewHistogramRange(xr)
 	if err != nil {
 		t.Error(err)
 	}
 
-	gsl_test(hr.Range == nil, "NewHistogramIncr returns valid Range pointer")
-	gsl_test(hr.Bin == nil, "NewHistogramIncr returns valid.Bin pointer")
+	gsl_test(hr.range_ == nil, "NewHistogramIncr returns valid range pointer")
+	gsl_test(hr.bin == nil, "NewHistogramIncr returns valid bin pointer")
 
 	{
 		for i := 0; i <= NR; i++ {
-			if hr.Range[i] != xr[i] {
+			if hr.range_[i] != xr[i] {
 				t.Error("NewHistogramRange creates range")
 
 			}
@@ -74,8 +74,8 @@ func Test_1d(t *testing.T) {
 			t.Error(err)
 		}
 
-		for i := range hr.Range {
-			if hr.Range[i] != xr[i] {
+		for i := range hr.range_ {
+			if hr.range_[i] != xr[i] {
 				t.Error("Histogram.SetRange sets range")
 			}
 		}
@@ -90,7 +90,7 @@ func Test_1d(t *testing.T) {
 
 	{
 		for i := 0; i < N; i++ {
-			if h.Bin[i] != float64(i) {
+			if h.bin[i] != float64(i) {
 				t.Fatal("Histogram.Accumulate writes into array")
 			}
 		}
@@ -105,7 +105,7 @@ func Test_1d(t *testing.T) {
 	}
 
 	for i := 0; i <= N; i++ {
-		h1.Range[i] = 100.0 + float64(i)
+		h1.range_[i] = 100.0 + float64(i)
 	}
 
 	err = h.Copy(h1)
@@ -115,8 +115,8 @@ func Test_1d(t *testing.T) {
 
 	{
 		for i := 0; i <= N; i++ {
-			if h1.Range[i] != h.Range[i] {
-				t.Fatal("Histogram.Copy copies.Bin Ranges")
+			if h1.range_[i] != h.range_[i] {
+				t.Fatal("Histogram.Copy copies bin ranges")
 			}
 		}
 	}
@@ -124,7 +124,7 @@ func Test_1d(t *testing.T) {
 	{
 		for i := 0; i < N; i++ {
 			if h1.Get(i) != h.Get(i) {
-				t.Fatal("Histogram.Copy copies.Bin values")
+				t.Fatal("Histogram.Copy copies bin values")
 			}
 		}
 	}
@@ -137,8 +137,8 @@ func Test_1d(t *testing.T) {
 
 	{
 		for i := 0; i <= N; i++ {
-			if h1.Range[i] != h.Range[i] {
-				t.Fatal("Histogram.Clone copies.Bin Ranges")
+			if h1.range_[i] != h.range_[i] {
+				t.Fatal("Histogram.Clone copies bin ranges")
 			}
 		}
 	}
@@ -146,7 +146,7 @@ func Test_1d(t *testing.T) {
 	{
 		for i := 0; i < N; i++ {
 			if h1.Get(i) != h.Get(i) {
-				t.Fatal("Histogram.Clone copies.Bin values")
+				t.Fatal("Histogram.Clone copies bin values")
 			}
 		}
 	}
@@ -155,7 +155,7 @@ func Test_1d(t *testing.T) {
 
 	{
 		for i := 0; i < N; i++ {
-			if h.Bin[i] != 0 {
+			if h.bin[i] != 0 {
 				t.Fatal("Histogram.Reset zeros array")
 			}
 		}
@@ -166,14 +166,14 @@ func Test_1d(t *testing.T) {
 			h.Increment(float64(i))
 
 			for j := 0; j <= i; j++ {
-				if h.Bin[j] != 1 {
-					t.Fatal("Histogram.Increment increases.Bin value")
+				if h.bin[j] != 1 {
+					t.Fatal("Histogram.Increment increases bin value")
 				}
 			}
 
 			for j := i + 1; j < N; j++ {
-				if h.Bin[j] != 0 {
-					t.Fatal("Histogram.Increment increases.Bin value")
+				if h.bin[j] != 0 {
+					t.Fatal("Histogram.Increment increases bin value")
 				}
 			}
 		}
@@ -184,7 +184,7 @@ func Test_1d(t *testing.T) {
 			x0, x1 := h.GetRange(i)
 
 			if x0 != float64(i) || x1 != float64(i+1) {
-				t.Fatal("Histogram.GetRange returns Range")
+				t.Fatal("Histogram.GetRange returns range")
 			}
 		}
 	}
@@ -207,8 +207,8 @@ func Test_1d(t *testing.T) {
 		}
 	}
 
-	h.Bin[2] = 123456.0
-	h.Bin[4] = -654321
+	h.bin[2] = 123456.0
+	h.bin[4] = -654321
 
 	{
 		max := h.MaxVal()
@@ -222,22 +222,22 @@ func Test_1d(t *testing.T) {
 
 	{
 		imax := h.MaxBin()
-		gsl_test(imax != 2, "Histogram.MaxBin finds maximum value.Bin")
+		gsl_test(imax != 2, "Histogram.MaxBin finds maximum value bin")
 	}
 
 	{
 		imin := h.MinBin()
-		gsl_test(imin != 4, "Histogram.MinBin find minimum value.Bin")
+		gsl_test(imin != 4, "Histogram.MinBin find minimum value bin")
 	}
 
 	for i := 0; i < N; i++ {
-		h.Bin[i] = float64(i + 27)
-		g.Bin[i] = float64((i + 27) * (i + 1))
+		h.bin[i] = float64(i + 27)
+		g.bin[i] = float64((i + 27) * (i + 1))
 	}
 
 	{
 		Sum := h.Sum()
-		gsl_test(Sum != N*27+((N-1)*N)/2, "Histogram.Sum Sums all.Bin values")
+		gsl_test(Sum != N*27+((N-1)*N)/2, "Histogram.Sum sums all bin values")
 	}
 
 	g.Copy(h1)
@@ -246,7 +246,7 @@ func Test_1d(t *testing.T) {
 	{
 		var status bool
 		for i := 0; i < N; i++ {
-			if h1.Bin[i] != g.Bin[i]+h.Bin[i] {
+			if h1.bin[i] != g.bin[i]+h.bin[i] {
 				status = true
 			}
 		}
@@ -259,7 +259,7 @@ func Test_1d(t *testing.T) {
 	{
 		var status bool
 		for i := 0; i < N; i++ {
-			if h1.Bin[i] != g.Bin[i]-h.Bin[i] {
+			if h1.bin[i] != g.bin[i]-h.bin[i] {
 				status = true
 			}
 		}
@@ -272,7 +272,7 @@ func Test_1d(t *testing.T) {
 	{
 		var status bool
 		for i := 0; i < N; i++ {
-			if h1.Bin[i] != g.Bin[i]*h.Bin[i] {
+			if h1.bin[i] != g.bin[i]*h.bin[i] {
 				status = true
 			}
 		}
@@ -285,7 +285,7 @@ func Test_1d(t *testing.T) {
 	{
 		var status bool
 		for i := 0; i < N; i++ {
-			if h1.Bin[i] != g.Bin[i]/h.Bin[i] {
+			if h1.bin[i] != g.bin[i]/h.bin[i] {
 				status = true
 			}
 		}
@@ -298,7 +298,7 @@ func Test_1d(t *testing.T) {
 	{
 		var status bool
 		for i := 0; i < N; i++ {
-			if h1.Bin[i] != 0.5*g.Bin[i] {
+			if h1.bin[i] != 0.5*g.bin[i] {
 				status = true
 			}
 		}
@@ -311,7 +311,7 @@ func Test_1d(t *testing.T) {
 	{
 		var status bool
 		for i := 0; i < N; i++ {
-			if h1.Bin[i] != 0.25+g.Bin[i] {
+			if h1.bin[i] != 0.25+g.bin[i] {
 				status = true
 			}
 		}
@@ -322,10 +322,10 @@ func Test_1d(t *testing.T) {
 
 	h, err = NewHistogramUniform(N, 0.0, 1.0)
 
-	gsl_test(h.Range == nil,
-		"NewHistogramUniform returns valid Range pointer")
-	gsl_test(h.Bin == nil,
-		"NewHistogramUniform returns valid.Bin pointer")
+	gsl_test(h.range_ == nil,
+		"NewHistogramUniform returns valid range pointer")
+	gsl_test(h.bin == nil,
+		"NewHistogramUniform returns valid bin pointer")
 
 	h.Accumulate(0.0, 1.0)
 	h.Accumulate(0.1, 2.0)
@@ -353,7 +353,7 @@ func Test_1d(t *testing.T) {
 				expected = 0.0
 			}
 
-			if h.Bin[i] != expected {
+			if h.bin[i] != expected {
 				status = true
 			}
 		}
@@ -374,18 +374,18 @@ func Test_1d(t *testing.T) {
 		fmt.Fscan(f, hh)
 
 		for i := 0; i < N; i++ {
-			if h.Range[i] != hh.Range[i] {
+			if h.range_[i] != hh.range_[i] {
 				status = true
 			}
-			if h.Bin[i] != hh.Bin[i] {
+			if h.bin[i] != hh.bin[i] {
 				status = true
 			}
 		}
-		if h.Range[N] != hh.Range[N] {
+		if h.range_[N] != hh.range_[N] {
 			status = true
 		}
 
-		gsl_test(status, "gsl_histogram_fprintf and fscanf")
+		gsl_test(status, "Histogram.Scan and .String")
 
 		f.Close()
 	}
@@ -407,18 +407,18 @@ func Test_1d(t *testing.T) {
 		io.Copy(hh, f)
 
 		for i := 0; i < N; i++ {
-			if h.Range[i] != hh.Range[i] {
+			if h.range_[i] != hh.range_[i] {
 				status = true
 			}
-			if h.Bin[i] != hh.Bin[i] {
+			if h.bin[i] != hh.bin[i] {
 				status = true
 			}
 		}
-		if h.Range[N] != hh.Range[N] {
+		if h.range_[N] != hh.range_[N] {
 			status = true
 		}
 
-		gsl_test(status, "gsl_histogram_fwrite and fread")
+		gsl_test(status, "Histogram.Read and .Write")
 
 		f.Close()
 	}
