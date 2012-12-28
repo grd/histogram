@@ -1,6 +1,7 @@
 package histogram
 
 /* oper.go
+ *
  * Copyright (C) 2000  Simone Piccardi
  *
  * This library is free software; you can redistribute it and/or
@@ -18,27 +19,19 @@ package histogram
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
-/***************************************************************
- *
- * File gsl_histogram_oper.c: 
- * Routine to make operation on histograms. 
- * Need GSL library and header.
- * Contains the routines:
- * gsl_histogram_same.Binning check if two histograms have the same.Binning 
- * gsl_histogram_add          add two histograms
- * gsl_histogram_sub          subctract two histograms
- * gsl_histogram_mult         multiply two histograms
- * gsl_histogram_div          divide two histograms
- * gsl_histogram_scale        scale histogram contents
- *
- * Author: S. Piccardi
- * Jan. 2000
- *
- ***************************************************************/
+
+//
+// Routines to make operations on histograms. 
+//
+// Author: S. Piccardi
+// Jan. 2000
+//
 
 import (
-	"log"
+	"errors"
 )
+
+var difBinErr = errors.New("histograms have different binning")
 
 // EqualBins control if two histograms have the same binning
 func (h1 *Histogram) EqualBins(h2 *Histogram) bool {
@@ -56,47 +49,51 @@ func (h1 *Histogram) EqualBins(h2 *Histogram) bool {
 }
 
 // Add two histograms
-func (h1 *Histogram) Add(h2 *Histogram) {
-	if !EqualBins(h1, h2) {
-		log.Fatal("histograms have different.Binning")
+func (h1 *Histogram) Add(h2 *Histogram) error {
+	if !h1.EqualBins(h2) {
+		return difBinErr
 	}
 
 	for i := range h1.Bin {
 		h1.Bin[i] += h2.Bin[i]
 	}
+	return nil
 }
 
 // Sub subtract two histograms
-func (h1 *Histogram) Sub(h2 *Histogram) {
-	if !EqualBins(h1, h2) {
-		log.Fatal("histograms have different.Binning")
+func (h1 *Histogram) Sub(h2 *Histogram) error {
+	if !h1.EqualBins(h2) {
+		return difBinErr
 	}
 
 	for i := range h1.Bin {
 		h1.Bin[i] -= h2.Bin[i]
 	}
+	return nil
 }
 
 // Mul multiply two histograms
-func (h1 *Histogram) Mul(h2 *Histogram) {
-	if !EqualBins(h1, h2) {
-		log.Fatal("histograms have different.Binning")
+func (h1 *Histogram) Mul(h2 *Histogram) error {
+	if !h1.EqualBins(h2) {
+		return difBinErr
 	}
 
 	for i := range h1.Bin {
 		h1.Bin[i] *= h2.Bin[i]
 	}
+	return nil
 }
 
 // Div divide two histograms
-func (h1 *Histogram) Div(h2 *Histogram) {
-	if !EqualBins(h1, h2) {
-		log.Fatal("histograms have different.Binning")
+func (h1 *Histogram) Div(h2 *Histogram) error {
+	if !h1.EqualBins(h2) {
+		return difBinErr
 	}
 
 	for i := range h1.Bin {
 		h1.Bin[i] /= h2.Bin[i]
 	}
+	return nil
 }
 
 // Scale a histogram by a numeric factor 

@@ -1,6 +1,7 @@
 package histogram
 
-/* histogram/maxval.go
+/* maxval.go
+ *
  * Copyright (C) 2000  Simone Piccardi
  *
  * This library is free software; you can redistribute it and/or
@@ -18,22 +19,15 @@ package histogram
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
-/***************************************************************
- *
- * File gsl_histogram_maxval.c: 
- * Routine to find maximum and minumum content of a hisogram. 
- * Need GSL library and header.
- * Contains the routines:
- * gsl_histogram_max_val find max content values
- * gsl_histogram_min_val find min content values
- * gsl_histogram.Bin_max find coordinates of max contents.Bin
- * gsl_histogram.Bin_min find coordinates of min contents.Bin
- *
- * Author: S. Piccardi
- * Jan. 2000
- *
- ***************************************************************/
 
+//
+// Routines to find maximum and minumum content of a histogram. 
+//
+// Author: S. Piccardi
+// Jan. 2000
+//
+
+// MaxVal find max content values
 func (h *Histogram) MaxVal() float64 {
 	max := h.Bin[0]
 	for i := range h.Bin {
@@ -44,6 +38,7 @@ func (h *Histogram) MaxVal() float64 {
 	return max
 }
 
+// MaxBin find index of max contents in bins
 func (h *Histogram) MaxBin() int {
 	var imax int
 	max := h.Bin[0]
@@ -56,6 +51,7 @@ func (h *Histogram) MaxBin() int {
 	return imax
 }
 
+// MinVal find min content values
 func (h *Histogram) MinVal() float64 {
 	min := h.Bin[0]
 	for i := range h.Bin {
@@ -66,6 +62,7 @@ func (h *Histogram) MinVal() float64 {
 	return min
 }
 
+// MinBin find index of min contents in bins
 func (h *Histogram) MinBin() int {
 	var imin int
 	min := h.Bin[0]

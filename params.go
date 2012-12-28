@@ -27,6 +27,6 @@ func (h *Histogram) Min() float64 {
 	return h.Range[0]
 }
 
-func (h *Histogram) Bins() int {
+func (h *Histogram) Len() int {
 	return len(h.Bin)
 }

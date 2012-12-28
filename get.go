@@ -1,6 +1,6 @@
 package histogram
 
-/* histogram/get.go
+/* get.go
  * 
  * Copyright (C) 1996, 1997, 1998, 1999, 2000 Brian Gough
  * 
@@ -19,17 +19,23 @@ package histogram
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+import (
+	"log"
+)
+
+var indexErr = "Error: index out of range. %v <> [0..%v]"
+
 func (h *Histogram) Get(i int) float64 {
-	if i >= len(h.Bin) || i < 0 {
-		panic("index lies outside valid range of 0 .. n - 1")
+	if i < 0 || i >= len(h.Bin) {
+		log.Fatalf(indexErr, i, len(h.Bin)-1)
 	}
 
 	return h.Bin[i]
 }
 
 func (h *Histogram) GetRange(i int) (lower, upper float64) {
-	if i >= len(h.Bin) {
-		panic("index lies outside valid Range of 0 .. n - 1")
+	if i < 0 || i >= len(h.Bin) {
+		log.Fatalf(indexErr, i, len(h.Bin)-1)
 	}
 
 	lower = h.Range[i]

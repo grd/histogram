@@ -1,6 +1,6 @@
 package histogram
 
-/* histogram/find.go
+/* find.go
  * 
  * Copyright (C) 1996, 1997, 1998, 1999, 2000 Brian Gough
  * 
@@ -23,12 +23,14 @@ import (
 	"fmt"
 )
 
+var rangeErr = "Value out of range. %v <> [%v..%v]"
+
 func find(Range []float64, x float64) (int, error) {
 	var i_linear, lower, upper, mid, i int
 	n := len(Range) - 1
 
 	if x < Range[0] || x >= Range[n] {
-		return 0, fmt.Errorf("Value out of range. %v <> [%v..%v]", x, Range[0], Range[n])
+		return 0, fmt.Errorf(rangeErr, x, Range[0], Range[n])
 	}
 
 	// optimize for linear case
@@ -63,7 +65,7 @@ func find(Range []float64, x float64) (int, error) {
 	// sanity check the result
 
 	if x < Range[lower] || x >= Range[lower+1] {
-		return 0, fmt.Errorf("x not found in range. %v <> [%v,%v]", x, Range[lower], Range[lower+1])
+		return 0, fmt.Errorf(rangeErr, x, Range[lower], Range[lower+1])
 	}
 
 	return i, nil

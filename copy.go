@@ -46,7 +46,7 @@ func (src *Histogram) Copy(dest *Histogram) error {
 }
 
 // Clone an Histogram creating an identical new one
-func (src *Histogram) Clone(clone *Histogram, err error) {
+func (src *Histogram) Clone() (clone *Histogram, err error) {
 	clone, err = NewHistogramRange(src.Range)
 
 	if err != nil {
