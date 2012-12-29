@@ -1,6 +1,6 @@
 package histogram
 
-/* get.go
+/* get2d.go
  * 
  * Copyright (C) 1996, 1997, 1998, 1999, 2000 Brian Gough
  * 
@@ -23,27 +23,54 @@ import (
 	"log"
 )
 
-var indexErr = "Error: index out of range. %v <> [0..%v]"
+func (h *Histogram2d) Get(i, j int) float64 {
+	nx := h.LenX()
+	ny := h.LenY()
 
-func (h *Histogram) Get(i int) float64 {
-	if i < 0 || i >= h.Len() {
-		log.Fatalf(indexErr, i, h.Len()-1)
+	if i < 0 || i >= nx {
+		log.Fatalf(indexErr, i, nx)
 	}
 
-	return h.bin[i]
+	if j < 0 || j >= ny {
+		log.Fatalf(indexErr, j, ny)
+	}
+
+	return h.bin[i*ny+j]
 }
 
-func (h *Histogram) GetRange(i int) (lower, upper float64) {
-	if i < 0 || i >= h.Len() {
-		log.Fatalf(indexErr, i, h.Len()-1)
+func (h *Histogram2d) GetXrange(i int) (xlower, xupper float64) {
+	nx := h.LenX()
+
+	if i < 0 || i >= nx {
+		log.Fatalf(indexErr, i, nx)
 	}
 
-	lower = h.range_[i]
-	upper = h.range_[i+1]
-
+	xlower = h.xrange[i]
+	xupper = h.xrange[i+1]
 	return
 }
 
-func (h *Histogram) Find(x float64) (int, error) {
-	return find(h.range_, x)
+func (h *Histogram2d) GetYrange(j int) (ylower, yupper float64) {
+	ny := h.LenY()
+
+	if j < 0 || j >= ny {
+		log.Fatalf(indexErr, j, ny)
+	}
+
+	ylower = h.yrange[j]
+	yupper = h.yrange[j+1]
+	return
+}
+
+func (h *Histogram2d) Find(x, y float64) (i, j int, err error) {
+	if i, err = find(h.xrange, x); err != nil {
+		return
+	}
+
+	// if statement is not really required...
+	if j, err = find(h.yrange, y); err != nil {
+		return
+	}
+
+	return
 }

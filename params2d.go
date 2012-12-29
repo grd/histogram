@@ -1,6 +1,6 @@
 package histogram
 
-/* histogram2d.go
+/* params2d.go
  * 
  * Copyright (C) 1996, 1997, 1998, 1999, 2000 Brian Gough
  * 
@@ -19,14 +19,26 @@ package histogram
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-type Histogram2d struct {
-	xrange []float64
-	yrange []float64
-	bin    []float64
+func (h *Histogram2d) Xmax() float64 {
+	return h.xrange[h.LenX()]
 }
 
-type Pdf2d struct {
-	xrange []float64
-	yrange []float64
-	sum    []float64
+func (h *Histogram2d) Xmin() float64 {
+	return h.xrange[0]
+}
+
+func (h *Histogram2d) Ymax() float64 {
+	return h.yrange[h.LenY()]
+}
+
+func (h *Histogram2d) Ymin() float64 {
+	return h.yrange[0]
+}
+
+func (h *Histogram2d) LenX() int {
+	return len(h.xrange) - 1
+}
+
+func (h *Histogram2d) LenY() int {
+	return len(h.yrange) - 1
 }

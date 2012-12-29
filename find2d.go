@@ -1,6 +1,6 @@
 package histogram
 
-/* histogram2d.go
+/* find2d.go
  * 
  * Copyright (C) 1996, 1997, 1998, 1999, 2000 Brian Gough
  * 
@@ -19,14 +19,18 @@ package histogram
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-type Histogram2d struct {
-	xrange []float64
-	yrange []float64
-	bin    []float64
-}
+func find2d(x_range, y_range []float64, x, y float64) (i, j int, err error) {
+	i, err = find(x_range, x)
 
-type Pdf2d struct {
-	xrange []float64
-	yrange []float64
-	sum    []float64
+	if err != nil {
+		return 0, 0, err
+	}
+
+	j, err = find(y_range, y)
+
+	if err != nil {
+		return 0, 0, err
+	}
+
+	return
 }

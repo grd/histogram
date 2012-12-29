@@ -1,6 +1,6 @@
 package histogram
 
-/* histogram2d.go
+/* add2d.go
  * 
  * Copyright (C) 1996, 1997, 1998, 1999, 2000 Brian Gough
  * 
@@ -19,14 +19,34 @@ package histogram
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-type Histogram2d struct {
-	xrange []float64
-	yrange []float64
-	bin    []float64
+import (
+	"errors"
+)
+
+func (h *Histogram2d) Increment(x, y float64) error {
+	return h.Accumulate(x, y, 1.0)
+
 }
 
-type Pdf2d struct {
-	xrange []float64
-	yrange []float64
-	sum    []float64
+func (h *Histogram2d) Accumulate(x, y, weight float64) error {
+	nx := h.LenX()
+	ny := h.LenY()
+
+	i, j, err := find2d(h.xrange, h.yrange, x, y)
+
+	if err != nil {
+		return err
+	}
+
+	if i >= nx {
+		return errors.New("index lies outside valid _range of 0 .. nx - 1")
+	}
+
+	if j >= ny {
+		return errors.New("index lies outside valid _range of 0 .. ny - 1")
+	}
+
+	h.bin[i*ny+j] += weight
+
+	return nil
 }

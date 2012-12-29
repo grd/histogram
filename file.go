@@ -70,7 +70,8 @@ func (h *Histogram) Write(data []byte) (n int, err error) {
 }
 
 // FormatString is used by the String and Scan functions for data parsing.
-var FormatString = "%.19e %.19e %.19e\n"
+// If you want a different output, just modify the variable.
+var FormatString = "%f %f %f\n"
 
 // String function corresponds with fmt.Stringer.
 // String uses the variabele FormatString for the data parsing

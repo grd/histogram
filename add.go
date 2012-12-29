@@ -28,7 +28,7 @@ func (h *Histogram) Increment(x float64) error {
 }
 
 func (h *Histogram) Accumulate(x, weight float64) error {
-	n := len(h.bin)
+	n := h.Len()
 	index, err := find(h.range_, x)
 
 	if err != nil {

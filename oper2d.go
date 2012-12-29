@@ -1,6 +1,6 @@
 package histogram
 
-/* oper.go
+/* oper2d.go
  *
  * Copyright (C) 2000  Simone Piccardi
  *
@@ -20,20 +20,19 @@ package histogram
  * Boston, MA 02111-1307, USA.
  */
 
-import (
-	"errors"
-)
-
-var difRangeErr = errors.New("histograms have different ranges")
-
 // EqualRanges control if two histograms have the same ranges
-func (h1 *Histogram) EqualRanges(h2 *Histogram) bool {
-	if h1.Len() != h2.Len() {
+func (h1 *Histogram2d) EqualRanges(h2 *Histogram2d) bool {
+	if h1.LenX() != h2.LenX() || h1.LenY() != h2.LenY() {
 		return false
 	}
 
-	for i := range h1.range_ {
-		if h1.range_[i] != h2.range_[i] {
+	for i := range h1.xrange {
+		if h1.xrange[i] != h2.xrange[i] {
+			return false
+		}
+	}
+	for i := range h1.yrange {
+		if h1.yrange[i] != h2.yrange[i] {
 			return false
 		}
 	}
@@ -41,8 +40,8 @@ func (h1 *Histogram) EqualRanges(h2 *Histogram) bool {
 	return true
 }
 
-// Add two histograms
-func (h1 *Histogram) Add(h2 *Histogram) error {
+// Add histogram h1 with h2 
+func (h1 *Histogram2d) Add(h2 *Histogram2d) error {
 	if !h1.EqualRanges(h2) {
 		return difRangeErr
 	}
@@ -50,11 +49,12 @@ func (h1 *Histogram) Add(h2 *Histogram) error {
 	for i := range h1.bin {
 		h1.bin[i] += h2.bin[i]
 	}
+
 	return nil
 }
 
-// Subtract two histograms
-func (h1 *Histogram) Sub(h2 *Histogram) error {
+// Subtract histogram h1 with h2
+func (h1 *Histogram2d) Sub(h2 *Histogram2d) error {
 	if !h1.EqualRanges(h2) {
 		return difRangeErr
 	}
@@ -62,11 +62,12 @@ func (h1 *Histogram) Sub(h2 *Histogram) error {
 	for i := range h1.bin {
 		h1.bin[i] -= h2.bin[i]
 	}
+
 	return nil
 }
 
-// Multiply two histograms
-func (h1 *Histogram) Mul(h2 *Histogram) error {
+// Multiply histogram h1 with h2
+func (h1 *Histogram2d) Mul(h2 *Histogram2d) error {
 	if !h1.EqualRanges(h2) {
 		return difRangeErr
 	}
@@ -74,11 +75,12 @@ func (h1 *Histogram) Mul(h2 *Histogram) error {
 	for i := range h1.bin {
 		h1.bin[i] *= h2.bin[i]
 	}
+
 	return nil
 }
 
-// Divide two histograms
-func (h1 *Histogram) Div(h2 *Histogram) error {
+// Divide histogram h1 with h2
+func (h1 *Histogram2d) Div(h2 *Histogram2d) error {
 	if !h1.EqualRanges(h2) {
 		return difRangeErr
 	}
@@ -86,18 +88,19 @@ func (h1 *Histogram) Div(h2 *Histogram) error {
 	for i := range h1.bin {
 		h1.bin[i] /= h2.bin[i]
 	}
+
 	return nil
 }
 
-// Scale a histogram by a numeric factor 
-func (h *Histogram) Scale(scale float64) {
+// Scale histogram by a numeric factor
+func (h *Histogram2d) Scale(scale float64) {
 	for i := range h.bin {
 		h.bin[i] *= scale
 	}
 }
 
-// Shift a histogram by a numeric offset 
-func (h *Histogram) Shift(shift float64) {
+// Shift histogram by a numeric offset
+func (h *Histogram2d) Shift(shift float64) {
 	for i := range h.bin {
 		h.bin[i] += shift
 	}

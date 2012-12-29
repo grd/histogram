@@ -1,6 +1,6 @@
 package histogram
 
-/* copy.go
+/* copy2d.go
  *
  * Copyright (C) 2000  Simone Piccardi
  *
@@ -20,28 +20,25 @@ package histogram
  * Boston, MA 02111-1307, USA.
  */
 
-import (
-	"errors"
-)
-
-var SizeErr = errors.New("histograms have different sizes, cannot copy")
-var AllocErr = errors.New("failed to allocate space for histogram struct")
-
-// Copy the contents of histogram src into dest 
-func (src *Histogram) Copy(dest *Histogram) error {
-	if src.Len() != dest.Len() {
+// Copy the contents of histogram src into dest
+func (src *Histogram2d) Copy(dest *Histogram2d) error {
+	if src.LenX() != dest.LenX() || src.LenY() != dest.LenY() {
 		return SizeErr
 	}
 
-	copy(dest.range_, src.range_)
+	copy(dest.xrange, src.xrange)
+	copy(dest.yrange, src.yrange)
 	copy(dest.bin, src.bin)
 
 	return nil
+
 }
 
 // Clone an histogram creating an identical new one
-func (src *Histogram) Clone() (clone *Histogram, err error) {
-	if clone, err = NewHistogramRange(src.range_); err != nil {
+func (src *Histogram2d) Clone() (clone *Histogram2d, err error) {
+	clone, err = NewHistogram2dRange(src.xrange, src.yrange)
+
+	if err != nil {
 		return nil, AllocErr
 	}
 

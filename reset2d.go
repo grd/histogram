@@ -1,6 +1,6 @@
 package histogram
 
-/* histogram2d.go
+/* reset2d.go
  * 
  * Copyright (C) 1996, 1997, 1998, 1999, 2000 Brian Gough
  * 
@@ -19,14 +19,8 @@ package histogram
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-type Histogram2d struct {
-	xrange []float64
-	yrange []float64
-	bin    []float64
-}
-
-type Pdf2d struct {
-	xrange []float64
-	yrange []float64
-	sum    []float64
+func (h *Histogram2d) Reset() {
+	for i := range h.bin {
+		h.bin[i] = 0
+	}
 }
