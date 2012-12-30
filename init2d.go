@@ -51,7 +51,7 @@ func NewHistogram2dUniform(nx, ny int, xmin, xmax, ymin, ymax float64) (
 		return nil, errors.New("ymin must be less than ymax")
 	}
 
-	h, err := NewHistogram2dIncr(nx, ny)
+	h, err := NewHistogram2dNatural(nx, ny)
 
 	if err != nil {
 		return nil, err
@@ -63,7 +63,9 @@ func NewHistogram2dUniform(nx, ny int, xmin, xmax, ymin, ymax float64) (
 	return h, nil
 }
 
-func NewHistogram2dIncr(nx, ny int) (*Histogram2d, error) {
+// NewHistogramNatural returns a new 2d histogram with ranges of
+// natural numbers, starting from 0, an increment of 1, and sizes of nx and ny.
+func NewHistogram2dNatural(nx, ny int) (*Histogram2d, error) {
 	if nx == 0 {
 		return nil, errors.New("histogram2d length nx must be positive integer")
 	}

@@ -24,13 +24,13 @@ import (
 	"errors"
 )
 
-var SizeErr = errors.New("histograms have different sizes, cannot copy")
-var AllocErr = errors.New("failed to allocate space for histogram struct")
+var ErrSize = errors.New("histograms have different sizes, cannot copy")
+var ErrAlloc = errors.New("failed to allocate space for histogram struct")
 
 // Copy the contents of histogram src into dest 
 func (src *Histogram) Copy(dest *Histogram) error {
 	if src.Len() != dest.Len() {
-		return SizeErr
+		return ErrSize
 	}
 
 	copy(dest.range_, src.range_)
@@ -42,7 +42,7 @@ func (src *Histogram) Copy(dest *Histogram) error {
 // Clone an histogram creating an identical new one
 func (src *Histogram) Clone() (clone *Histogram, err error) {
 	if clone, err = NewHistogramRange(src.range_); err != nil {
-		return nil, AllocErr
+		return nil, ErrAlloc
 	}
 
 	copy(clone.bin, src.bin)

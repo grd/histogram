@@ -62,7 +62,9 @@ func NewHistogramUniform(n int, xmin, xmax float64) (*Histogram, error) {
 	return h, nil
 }
 
-func NewHistogramIncr(n int) (*Histogram, error) {
+// NewHistogramNatural returns a new histogram with a range of
+// natural numbers, starting from 0, an increment of 1, and a size of n.
+func NewHistogramNatural(n int) (*Histogram, error) {
 	h, err := NewHistogram(n)
 
 	if err != nil {

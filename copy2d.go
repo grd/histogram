@@ -23,7 +23,7 @@ package histogram
 // Copy the contents of histogram src into dest
 func (src *Histogram2d) Copy(dest *Histogram2d) error {
 	if src.LenX() != dest.LenX() || src.LenY() != dest.LenY() {
-		return SizeErr
+		return ErrSize
 	}
 
 	copy(dest.xrange, src.xrange)
@@ -39,7 +39,7 @@ func (src *Histogram2d) Clone() (clone *Histogram2d, err error) {
 	clone, err = NewHistogram2dRange(src.xrange, src.yrange)
 
 	if err != nil {
-		return nil, AllocErr
+		return nil, ErrAlloc
 	}
 
 	copy(clone.bin, src.bin)

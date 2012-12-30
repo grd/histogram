@@ -30,7 +30,6 @@ import (
 func (h *Histogram) Mean() float64 {
 	n := h.Len()
 
-	// wmean and W should be "long double" instead of float64 (so Float128 ?)
 	var wmean, W float64
 
 	for i := 0; i < n; i++ {
@@ -50,7 +49,6 @@ func (h *Histogram) Mean() float64 {
 func (h *Histogram) Sigma() float64 {
 	n := h.Len()
 
-	// long double wvariance, wmean and W ... Float128 ?
 	var wvariance, wmean, W float64
 
 	// FIXME: should use a single pass formula here, as given in
@@ -77,7 +75,6 @@ func (h *Histogram) Sigma() float64 {
 		wi := h.bin[i]
 
 		if wi > 0 {
-			// long double delta... Float128 ?
 			delta := (xi - wmean)
 			W += wi
 			wvariance += (delta*delta - wvariance) * (wi / W)
@@ -90,8 +87,8 @@ func (h *Histogram) Sigma() float64 {
 
 // Sum up all bins of the histogram
 func (h *Histogram) Sum() (res float64) {
-	for i := range h.bin {
-		res += h.bin[i]
+	for _, val := range h.bin {
+		res += val
 	}
 	return
 }

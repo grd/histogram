@@ -1,12 +1,19 @@
-* find.go : Generate clear error output for find func when value outside range
-* more uniform error handling. Make a descision about what method to use.
-  e.g. log.Fatal / errors.New
-* stat.go : Mean() and Sigma() expects long double. Maybe we should Float128 for this.
-* file.go : Output of String func too much detail
+* all     : more uniform error handling. Make a descision about what method to 
+            use. e.g. log.Fatal / errors.New
 * testing : Faulty Increments (4 pcs). See output. This is a rounding error.
-* 2d hist : Add complete 2d histogram functionality
-* testing : Place all tests in 3 files: main_test.go, main1d_test.go and main2d_test.go
+* testing : Place all tests in 3 files: main_test.go, main1d_test.go and 
+            main2d_test.go
+* file.go : Read and Write deal with buffer size. (also for file2d.go)
+* all     : Is it sensible to create goroutines? And if yes, where?
+* pdf.go  : All fields of struct are hidden. Do we need to access them?
 
 Done:
 * file.go : Error checks on Read and Write methods
 * init.go : I think func make_uniform can have a simpler calculation method.
+* file.go : Output of String func too much detail
+* find.go : Generate clear error output for find func when value outside range
+* stat.go : Mean() and Sigma() expects long double. Maybe Float128 ? 
+            Answ: No. There will be a serious speed impact, a lot more code, 
+            and finally, do you really want this accuracy from a histogram???
+* 2d hist : Add complete 2d histogram functionality
+
