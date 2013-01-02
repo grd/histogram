@@ -19,17 +19,7 @@ package histogram
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import (
-	"errors"
-)
-
-func (h *Histogram2d) Increment(x, y float64) error {
-	return h.Accumulate(x, y, 1.0)
-
-}
-
-func (h *Histogram2d) Accumulate(x, y, weight float64) error {
-	nx := h.LenX()
+func (h *Histogram2d) Add(x, y float64) error {
 	ny := h.LenY()
 
 	i, j, err := find2d(h.xrange, h.yrange, x, y)
@@ -38,15 +28,7 @@ func (h *Histogram2d) Accumulate(x, y, weight float64) error {
 		return err
 	}
 
-	if i >= nx {
-		return errors.New("index lies outside valid _range of 0 .. nx - 1")
-	}
-
-	if j >= ny {
-		return errors.New("index lies outside valid _range of 0 .. ny - 1")
-	}
-
-	h.bin[i*ny+j] += weight
+	h.bin[i*ny+j] += 1
 
 	return nil
 }

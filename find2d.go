@@ -23,13 +23,14 @@ func find2d(x_range, y_range []float64, x, y float64) (i, j int, err error) {
 	i, err = find(x_range, x)
 
 	if err != nil {
-		return 0, 0, err
+		return
 	}
 
 	j, err = find(y_range, y)
 
+	// if is only for clarity
 	if err != nil {
-		return 0, 0, err
+		return
 	}
 
 	return

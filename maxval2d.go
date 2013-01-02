@@ -20,30 +20,18 @@ package histogram
  * Boston, MA 02111-1307, USA.
  */
 
-// MaxVal returns the maximum contents value of a 2D histogram
-func (h *Histogram2d) MaxVal() (max float64) {
-	max = h.bin[0]
-
-	for _, val := range h.bin {
-		if val > max {
-			max = val
-		}
-	}
-	return
-}
-
-// MaxBin finds the bin index for maximum value of a 2D histogram
-func (h *Histogram2d) MaxBin() (xmax, ymax int) {
+// Max finds first value and index of max contents in bins
+func (h *Histogram2d) Max() (xmax, ymax, imax int) {
 	nx := h.LenX()
 	ny := h.LenY()
-	max := h.bin[0]
+	imax = h.bin[0]
 
 	for i := 0; i < nx; i++ {
 		for j := 0; j < ny; j++ {
 			x := h.bin[i*ny+j]
 
-			if x > max {
-				max = x
+			if x > imax {
+				imax = x
 				xmax = i
 				ymax = j
 			}
@@ -52,30 +40,18 @@ func (h *Histogram2d) MaxBin() (xmax, ymax int) {
 	return
 }
 
-// MinVal returns the minimum contents value of a 2D histogram
-func (h *Histogram2d) MinVal() (min float64) {
-	min = h.bin[0]
-
-	for _, val := range h.bin {
-		if val < min {
-			min = val
-		}
-	}
-	return
-}
-
-// MinBin finds the bin index for minimum value of a 2D histogram
-func (h *Histogram2d) MinBin() (xmin, ymin int) {
+// Min finds first value and index of min contents in bins
+func (h *Histogram2d) Bin() (xmin, ymin, imin int) {
 	nx := h.LenX()
 	ny := h.LenY()
-	min := h.bin[0]
+	imin = h.bin[0]
 
 	for i := 0; i < nx; i++ {
 		for j := 0; j < ny; j++ {
 			x := h.bin[i*ny+j]
 
-			if x < min {
-				min = x
+			if x < imin {
+				imin = x
 				xmin = i
 				ymin = j
 			}

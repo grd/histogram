@@ -21,7 +21,12 @@ package histogram
 
 type Histogram struct {
 	range_ []float64
-	bin    []float64
+	bin    []int
+}
+
+type HistogramInt struct {
+	range_ []int
+	bin    []int
 }
 
 // Probability distribution function

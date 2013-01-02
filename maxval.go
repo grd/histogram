@@ -20,50 +20,50 @@ package histogram
  * Boston, MA 02111-1307, USA.
  */
 
-// MaxVal find max content values
-func (h *Histogram) MaxVal() float64 {
-	max := h.bin[0]
-	for i := range h.bin {
-		if h.bin[i] > max {
-			max = h.bin[i]
-		}
-	}
-	return max
-}
-
-// MaxBin find index of max contents in bins
-func (h *Histogram) MaxBin() int {
-	var imax int
-	max := h.bin[0]
+// Max finds first value and index of max contents in bins
+func (h *Histogram) Max() (max, imax int) {
+	max = h.bin[0]
 	for i := range h.bin {
 		if h.bin[i] > max {
 			max = h.bin[i]
 			imax = i
 		}
 	}
-	return imax
+	return
 }
 
-// MinVal find min content values
-func (h *Histogram) MinVal() float64 {
-	min := h.bin[0]
-	for i := range h.bin {
-		if h.bin[i] < min {
-			min = h.bin[i]
-		}
-	}
-	return min
-}
-
-// MinBin find index of min contents in bins
-func (h *Histogram) MinBin() int {
-	var imin int
-	min := h.bin[0]
+// Min finds first value and index of min contents in bins
+func (h *Histogram) Min() (min, imin int) {
+	min = h.bin[0]
 	for i := range h.bin {
 		if h.bin[i] < min {
 			min = h.bin[i]
 			imin = i
 		}
 	}
-	return imin
+	return
+}
+
+// Max finds first value and index of max contents in bins
+func (h *HistogramInt) Max() (max, imax int) {
+	max = h.bin[0]
+	for i := range h.bin {
+		if h.bin[i] > max {
+			max = h.bin[i]
+			imax = i
+		}
+	}
+	return
+}
+
+// Min finds first value and index of min contents in bins
+func (h *HistogramInt) Min() (min, imin int) {
+	min = h.bin[0]
+	for i := range h.bin {
+		if h.bin[i] < min {
+			min = h.bin[i]
+			imin = i
+		}
+	}
+	return
 }

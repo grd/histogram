@@ -22,7 +22,7 @@ package histogram
 type Histogram2d struct {
 	xrange []float64
 	yrange []float64
-	bin    []float64
+	bin    []int
 }
 
 type Pdf2d struct {

@@ -20,62 +20,14 @@ package histogram
  */
 
 import (
-	"bytes"
-	"encoding/binary"
 	"fmt"
-	"io"
-	"math"
 )
-
-// Read function corresponds with io.Reader.
-// The data is binary.
-func (h *Histogram) Read(data []byte) (n int, err error) {
-	if len(data) < (len(h.range_)+len(h.bin))*8 {
-		return 0, io.ErrShortBuffer
-	}
-
-	for i := range h.range_ {
-		n += binary.PutUvarint(data[n:], math.Float64bits(h.range_[i]))
-	}
-
-	for i := range h.bin {
-		n += binary.PutUvarint(data[n:], math.Float64bits(h.bin[i]))
-	}
-
-	return n, io.EOF
-}
-
-// Write function corresponds with io.Writer.
-// The data is binary.
-func (h *Histogram) Write(data []byte) (n int, err error) {
-	for i := range h.range_ {
-		val, num := binary.Uvarint(data[n:])
-		if num <= 0 {
-			return n, io.ErrShortWrite
-		}
-		h.range_[i] = math.Float64frombits(val)
-		n += num
-	}
-
-	for i := range h.bin {
-		val, num := binary.Uvarint(data[n:])
-		if num <= 0 {
-			return n, io.ErrShortWrite
-		}
-		h.bin[i] = math.Float64frombits(val)
-		n += num
-	}
-
-	return n, io.EOF
-}
 
 // FormatString is used by the String and Scan functions for data parsing.
 // If you want a different output, just modify the variable.
-var FormatString = "%f %f %f\n"
+var FormatString = "%v %v %v\n"
 
-// String function corresponds with fmt.Stringer.
 // String uses the variabele FormatString for the data parsing
-// (which is plain text).
 func (h *Histogram) String() (res string) {
 	for i := range h.bin {
 		str := fmt.Sprintf(FormatString, h.range_[i], h.range_[i+1], h.bin[i])
@@ -84,32 +36,11 @@ func (h *Histogram) String() (res string) {
 	return
 }
 
-// Scan function corresponds with fmt.Scanner. 
-// Scan uses the variabele FormatString for the data parsing
-// (which is plain text).
-func (h *Histogram) Scan(s fmt.ScanState, ch rune) (err error) {
-	var buf bytes.Buffer
-
+// String uses the variabele FormatString for the data parsing
+func (h *HistogramInt) String() (res string) {
 	for i := range h.bin {
-		var done bool
-
-		for !done {
-			ch, _, err := s.ReadRune()
-			if err != nil {
-				return io.ErrUnexpectedEOF
-			}
-			if ch == '\n' {
-				done = true
-			}
-			buf.WriteRune(ch)
-		}
-		str, _ := buf.ReadString('\n')
-		n, _ := fmt.Sscanf(str, FormatString, &h.range_[i], &h.range_[i+1], &h.bin[i])
-
-		if n < 3 {
-			return io.ErrUnexpectedEOF
-		}
+		str := fmt.Sprintf(FormatString, h.range_[i], h.range_[i+1], h.bin[i])
+		res += str
 	}
-
 	return
 }

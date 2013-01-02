@@ -19,9 +19,6 @@ package histogram
  * Boston, MA 02111-1307, USA.
  */
 
-// FIXME: We skip negative values in the histogram h.bin[i] < 0,
-// since those correspond to negative weights (BJG)
-
 import (
 	"math"
 )
@@ -29,50 +26,36 @@ import (
 // Mean compute the bin-weighted arithmetic mean of the histogram
 func (h *Histogram) Mean() float64 {
 	n := h.Len()
-
 	var wmean, W float64
 
 	for i := 0; i < n; i++ {
 		xi := (h.range_[i+1] + h.range_[i]) / 2
-		wi := h.bin[i]
+		wi := float64(h.bin[i])
 
 		if wi > 0 {
 			W += wi
 			wmean += (xi - wmean) * (wi / W)
 		}
 	}
-
 	return wmean
 }
 
 // Sigma compute the bin-weighted sigma of the histogram
 func (h *Histogram) Sigma() float64 {
 	n := h.Len()
-
 	var wvariance, wmean, W float64
 
 	// FIXME: should use a single pass formula here, as given in
 	// N.J.Higham 'Accuracy and Stability of Numerical Methods', p.12 
 
 	// Compute the mean
-
-	for i := 0; i < n; i++ {
-		xi := (h.range_[i+1] + h.range_[i]) / 2
-		wi := h.bin[i]
-
-		if wi > 0 {
-			W += wi
-			wmean += (xi - wmean) * (wi / W)
-		}
-	}
+	wmean = h.Mean()
 
 	// Compute the variance
-
 	W = 0.0
-
 	for i := 0; i < n; i++ {
-		xi := ((h.range_[i+1]) + (h.range_[i])) / 2
-		wi := h.bin[i]
+		xi := (h.range_[i+1] + h.range_[i]) / 2
+		wi := float64(h.bin[i])
 
 		if wi > 0 {
 			delta := (xi - wmean)
@@ -80,13 +63,64 @@ func (h *Histogram) Sigma() float64 {
 			wvariance += (delta*delta - wvariance) * (wi / W)
 		}
 	}
-
 	sigma := math.Sqrt(wvariance)
 	return sigma
 }
 
 // Sum up all bins of the histogram
-func (h *Histogram) Sum() (res float64) {
+func (h *Histogram) Sum() (res int) {
+	for _, val := range h.bin {
+		res += val
+	}
+	return
+}
+
+// Mean compute the bin-weighted arithmetic mean of the histogram
+func (h *HistogramInt) Mean() float64 {
+	n := h.Len()
+	var wmean, W float64
+
+	for i := 0; i < n; i++ {
+		xi := float64(h.range_[i+1]+h.range_[i]) / 2
+		wi := float64(h.bin[i])
+
+		if wi > 0 {
+			W += wi
+			wmean += (xi - wmean) * (wi / W)
+		}
+	}
+	return wmean
+}
+
+// Sigma compute the bin-weighted sigma of the histogram
+func (h *HistogramInt) Sigma() float64 {
+	n := h.Len()
+	var wvariance, wmean, W float64
+
+	// FIXME: should use a single pass formula here, as given in
+	// N.J.Higham 'Accuracy and Stability of Numerical Methods', p.12 
+
+	// Compute the mean
+	wmean = h.Mean()
+
+	// Compute the variance
+	W = 0.0
+	for i := 0; i < n; i++ {
+		xi := float64(h.range_[i+1]+h.range_[i]) / 2
+		wi := float64(h.bin[i])
+
+		if wi > 0 {
+			delta := (xi - wmean)
+			W += wi
+			wvariance += (delta*delta - wvariance) * (wi / W)
+		}
+	}
+	sigma := math.Sqrt(wvariance)
+	return sigma
+}
+
+// Sum up all bins of the histogram
+func (h *HistogramInt) Sum() (res int) {
 	for _, val := range h.bin {
 		res += val
 	}

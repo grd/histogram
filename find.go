@@ -23,50 +23,36 @@ import (
 	"fmt"
 )
 
-var rangeErr = "Value out of range. %v <> [%v..%v]"
+var errRange = "Value out of range. %v <> [%v..%v]"
 
-func find(Range []float64, x float64) (int, error) {
-	var i_linear, lower, upper, mid, i int
+func find(Range []float64, x float64) (res int, err error) {
 	n := len(Range) - 1
 
-	if x < Range[0] || x >= Range[n] {
-		return 0, fmt.Errorf(rangeErr, x, Range[0], Range[n])
-	}
-
-	// optimize for linear case
-
-	{
-		u := (x - Range[0]) / (Range[n] - Range[0])
-		i_linear = int(u * float64(n))
-	}
-
-	if x >= Range[i_linear] && x < Range[i_linear+1] {
-		i = i_linear
-		return i, nil
-	}
-
-	// perform.binary search
-
-	upper = n
-	lower = 0
-
-	for upper-lower > 1 {
-		mid = (upper + lower) / 2
-
-		if x >= Range[mid] {
-			lower = mid
-		} else {
-			upper = mid
+	res = -1
+	for i := range Range {
+		if x >= Range[i] {
+			res = i
 		}
 	}
-
-	i = lower
-
-	// sanity check the result
-
-	if x < Range[lower] || x >= Range[lower+1] {
-		return 0, fmt.Errorf(rangeErr, x, Range[lower], Range[lower+1])
+	if res < 0 || res == n {
+		err = fmt.Errorf(errRange, x, Range[0], Range[n])
 	}
 
-	return i, nil
+	return
+}
+
+func findInt(Range []int, x int) (res int, err error) {
+	n := len(Range) - 1
+
+	res = -1
+	for i := range Range {
+		if x >= Range[i] {
+			res = i
+		}
+	}
+	if res < 0 || res == n {
+		err = fmt.Errorf(errRange, x, Range[0], Range[n])
+	}
+
+	return
 }

@@ -19,15 +19,12 @@ package histogram
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-func (h *Histogram) Max() float64 {
-	return h.range_[len(h.range_)-1]
-}
-
-func (h *Histogram) Min() float64 {
-	return h.range_[0]
+// Len returns the number of bins
+func (h *Histogram) Len() int {
+	return len(h.bin)
 }
 
 // Len returns the number of bins
-func (h *Histogram) Len() int {
+func (h *HistogramInt) Len() int {
 	return len(h.bin)
 }

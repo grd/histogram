@@ -19,27 +19,26 @@ package histogram
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import (
-	"errors"
-)
-
-func (h *Histogram) Increment(x float64) error {
-	return h.Accumulate(x, 1.0)
-}
-
-func (h *Histogram) Accumulate(x, weight float64) error {
-	n := h.Len()
+func (h *Histogram) Add(x float64) error {
 	index, err := find(h.range_, x)
 
 	if err != nil {
 		return err
 	}
 
-	if index >= n {
-		return errors.New("index lies outside valid Range of 0 .. n - 1")
+	h.bin[index] += 1
+
+	return nil
+}
+
+func (h *HistogramInt) Add(x int) error {
+	index, err := findInt(h.range_, x)
+
+	if err != nil {
+		return err
 	}
 
-	h.bin[index] += weight
+	h.bin[index] += 1
 
 	return nil
 }

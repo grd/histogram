@@ -23,96 +23,7 @@ import (
 	"errors"
 )
 
-func NewHistogram(n int) (*Histogram, error) {
-	var h Histogram
-
-	if n <= 0 {
-		return nil, errors.New("histogram length n must be positive integer")
-	}
-
-	h.range_ = make([]float64, n+1)
-	h.bin = make([]float64, n)
-
-	return &h, nil
-}
-
-func make_uniform(Range []float64, xmin, xmax float64) {
-	//
-	// Simplified calculation. (2012 G.v.d.Schoot)
-	//
-	incr := (xmax - xmin) / float64(len(Range)-1)
-	for i := range Range {
-		Range[i] = xmin + float64(i)*incr
-	}
-}
-
-func NewHistogramUniform(n int, xmin, xmax float64) (*Histogram, error) {
-	if xmin >= xmax {
-		return nil, errors.New("xmin must be less than xmax")
-	}
-
-	h, err := NewHistogram(n)
-
-	if err != nil {
-		return h, err
-	}
-
-	make_uniform(h.range_, xmin, xmax)
-
-	return h, nil
-}
-
-// NewHistogramNatural returns a new histogram with a range of
-// natural numbers, starting from 0, an increment of 1, and a size of n.
-func NewHistogramNatural(n int) (*Histogram, error) {
-	h, err := NewHistogram(n)
-
-	if err != nil {
-		return h, err
-	}
-
-	for i := range h.range_ {
-		h.range_[i] = float64(i)
-	}
-
-	return h, nil
-}
-
-//  These initialization functions suggested by Achim Gaedke 
-
-func (h *Histogram) SetRangesUniform(xmin, xmax float64) error {
-	if xmin >= xmax {
-		return errors.New("xmin must be less than xmax")
-	}
-
-	//  initialize Ranges 
-	make_uniform(h.range_, xmin, xmax)
-
-	//  clear contents 
-	for i := range h.bin {
-		h.bin[i] = 0
-	}
-
-	return nil
-}
-
-func (h *Histogram) SetRanges(Range []float64) error {
-	if len(h.range_) != len(Range) {
-		return errors.New("size of range must match size of histogram")
-	}
-
-	//  initialize ranges 
-	copy(h.range_, Range)
-
-	//  clear contents 
-	for i := range h.bin {
-		h.bin[i] = 0
-	}
-
-	return nil
-}
-
-func NewHistogramRange(Range []float64) (*Histogram, error) {
+func NewHistogram(Range []float64) (*Histogram, error) {
 	var h Histogram
 	n := len(Range) - 1
 
@@ -130,7 +41,33 @@ func NewHistogramRange(Range []float64) (*Histogram, error) {
 
 	// Allocate histogram  
 	h.range_ = make([]float64, n+1)
-	h.bin = make([]float64, n)
+	h.bin = make([]int, n)
+
+	// initialize Ranges 
+	copy(h.range_, Range)
+
+	return &h, nil
+}
+
+func NewHistogramInt(Range []int) (*HistogramInt, error) {
+	var h HistogramInt
+	n := len(Range) - 1
+
+	// check arguments 
+	if n <= 0 {
+		return nil, errors.New("histogram length n must be positive integer")
+	}
+
+	// check ranges 
+	for i := 0; i < n; i++ {
+		if Range[i] >= Range[i+1] {
+			return nil, errors.New("Histogram range must be in increasing order")
+		}
+	}
+
+	// Allocate histogram  
+	h.range_ = make([]int, n+1)
+	h.bin = make([]int, n)
 
 	// initialize Ranges 
 	copy(h.range_, Range)

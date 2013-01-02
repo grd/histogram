@@ -44,47 +44,32 @@ func (p *Pdf) Sample(r float64) (float64, error) {
 	return x, nil
 }
 
-func NewPdf(n int) (*Pdf, error) {
-	var p Pdf
-
-	if n <= 0 {
-		return nil, errors.New("histogram pdf length n must be positive integer")
-	}
-
-	p.range_ = make([]float64, n+1)
-	p.sum = make([]float64, n+1)
-
-	return &p, nil
-}
-
-func (p *Pdf) Init(h *Histogram) error {
-	if len(p.sum) != len(h.range_) {
-		return errors.New("histogram length must match pdf length")
-	}
-
+func NewPdf(h *Histogram) (*Pdf, error) {
 	for i := range h.bin {
 		if h.bin[i] < 0 {
-			return errors.New("histogram bins must be non-negative to compute" +
-				"a probability distribution")
+			return nil, errors.New("histogram bins must be non-negative " +
+				"to compute a probability distribution")
 		}
 	}
+
+	var p Pdf
+	p.range_ = make([]float64, h.Len()+1)
+	p.sum = make([]float64, h.Len()+1)
 
 	for i := range p.range_ {
 		p.range_[i] = h.range_[i]
 	}
 
-	var mean, Sum float64
+	var mean, sum float64
 
 	for i := range h.bin {
-		mean += (h.bin[i] - mean) / float64(i+1)
+		mean += (float64(h.bin[i]) - mean) / float64(i+1)
 	}
-
-	p.sum[0] = 0
 
 	for i := range h.bin {
-		Sum += (h.bin[i] / mean) / float64(len(h.bin))
-		p.sum[i+1] = Sum
+		sum += (float64(h.bin[i]) / mean) / float64(len(h.bin))
+		p.sum[i+1] = sum
 	}
 
-	return nil
+	return &p, nil
 }

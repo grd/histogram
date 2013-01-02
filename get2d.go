@@ -19,44 +19,18 @@ package histogram
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import (
-	"log"
-)
-
-func (h *Histogram2d) Get(i, j int) float64 {
-	nx := h.LenX()
+func (h *Histogram2d) Get(i, j int) int {
 	ny := h.LenY()
-
-	if i < 0 || i >= nx {
-		log.Fatalf(indexErr, i, nx)
-	}
-
-	if j < 0 || j >= ny {
-		log.Fatalf(indexErr, j, ny)
-	}
-
 	return h.bin[i*ny+j]
 }
 
 func (h *Histogram2d) GetXrange(i int) (xlower, xupper float64) {
-	nx := h.LenX()
-
-	if i < 0 || i >= nx {
-		log.Fatalf(indexErr, i, nx)
-	}
-
 	xlower = h.xrange[i]
 	xupper = h.xrange[i+1]
 	return
 }
 
 func (h *Histogram2d) GetYrange(j int) (ylower, yupper float64) {
-	ny := h.LenY()
-
-	if j < 0 || j >= ny {
-		log.Fatalf(indexErr, j, ny)
-	}
-
 	ylower = h.yrange[j]
 	yupper = h.yrange[j+1]
 	return

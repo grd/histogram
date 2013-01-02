@@ -50,35 +50,21 @@ func (p *Pdf2d) Sample(r1, r2 float64) (x, y float64, err error) {
 	return
 }
 
-func NewPdf2d(nx, ny int) (p *Pdf2d, err error) {
-	p = &Pdf2d{}
-	n := nx * ny
+var errNegPdf = "histogram bins must be non-negative to compute " +
+	"a probability distribution"
 
-	if n == 0 {
-		err = errors.New("histogram2d pdf length n must be positive integer")
-		return
-	}
-
-	p.xrange = make([]float64, nx+1)
-	p.yrange = make([]float64, ny+1)
-	p.sum = make([]float64, n+1)
-	return
-}
-
-func (p *Pdf2d) Init(h *Histogram2d) error {
-	nx, ny := len(p.xrange)-1, len(p.yrange)-1
-	n := nx * ny
-
-	if nx != h.LenX() || ny != h.LenY() {
-		return errors.New("histogram2d size must match pdf size")
-	}
-
-	for i := 0; i < n; i++ {
+func NewPdf2d(h *Histogram2d) (p *Pdf2d, err error) {
+	for i := range h.bin {
 		if h.bin[i] < 0 {
-			return errors.New("histogram bins must be non-negative to compute " +
-				"a probability distribution")
+			err = errors.New(errNegPdf)
+			return
 		}
 	}
+
+	p = &Pdf2d{}
+	p.xrange = make([]float64, len(h.xrange))
+	p.yrange = make([]float64, len(h.yrange))
+	p.sum = make([]float64, len(h.bin)+1)
 
 	copy(p.xrange, h.xrange)
 	copy(p.yrange, h.yrange)
@@ -86,15 +72,13 @@ func (p *Pdf2d) Init(h *Histogram2d) error {
 	var mean, sum float64
 
 	for i := range h.bin {
-		mean += (h.bin[i] - mean) / float64(i+1)
+		mean += (float64(h.bin[i]) - mean) / float64(i+1)
 	}
 
-	p.sum[0] = 0
-
 	for i := range h.bin {
-		sum += (h.bin[i] / mean) / float64(n)
+		sum += (float64(h.bin[i]) / mean) / float64(len(h.bin))
 		p.sum[i+1] = sum
 	}
 
-	return nil
+	return
 }

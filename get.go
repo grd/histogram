@@ -19,25 +19,11 @@ package histogram
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import (
-	"log"
-)
-
-var indexErr = "Error: index out of range. %v <> [0..%v]"
-
-func (h *Histogram) Get(i int) float64 {
-	if i < 0 || i >= h.Len() {
-		log.Fatalf(indexErr, i, h.Len()-1)
-	}
-
+func (h *Histogram) Get(i int) int {
 	return h.bin[i]
 }
 
 func (h *Histogram) GetRange(i int) (lower, upper float64) {
-	if i < 0 || i >= h.Len() {
-		log.Fatalf(indexErr, i, h.Len()-1)
-	}
-
 	lower = h.range_[i]
 	upper = h.range_[i+1]
 
@@ -46,4 +32,19 @@ func (h *Histogram) GetRange(i int) (lower, upper float64) {
 
 func (h *Histogram) Find(x float64) (int, error) {
 	return find(h.range_, x)
+}
+
+func (h *HistogramInt) Get(i int) int {
+	return h.bin[i]
+}
+
+func (h *HistogramInt) GetRange(i int) (lower, upper int) {
+	lower = h.range_[i]
+	upper = h.range_[i+1]
+
+	return
+}
+
+func (h *HistogramInt) Find(x int) (int, error) {
+	return findInt(h.range_, x)
 }

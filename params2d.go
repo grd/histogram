@@ -19,22 +19,6 @@ package histogram
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-func (h *Histogram2d) Xmax() float64 {
-	return h.xrange[h.LenX()]
-}
-
-func (h *Histogram2d) Xmin() float64 {
-	return h.xrange[0]
-}
-
-func (h *Histogram2d) Ymax() float64 {
-	return h.yrange[h.LenY()]
-}
-
-func (h *Histogram2d) Ymin() float64 {
-	return h.yrange[0]
-}
-
 func (h *Histogram2d) LenX() int {
 	return len(h.xrange) - 1
 }
