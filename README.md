@@ -6,7 +6,7 @@ Pure [Go](http://www.golang.org) implementation of the [GSL Histogram library](h
 
 For the API overview see [Godoc](http://godoc.org/github.com/grd/histogram).
 
-Testing 100% pass. Testing covers (almost) the complete functionality.
+Testing is also work in progress. Testing covers (almost) the complete functionality.
 Tested on Debian6 32-bit only.
 
 See TODO for open issues.

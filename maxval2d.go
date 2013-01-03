@@ -41,7 +41,7 @@ func (h *Histogram2d) Max() (xmax, ymax, imax int) {
 }
 
 // Min finds first value and index of min contents in bins
-func (h *Histogram2d) Bin() (xmin, ymin, imin int) {
+func (h *Histogram2d) Min() (xmin, ymin, imin int) {
 	nx := h.LenX()
 	ny := h.LenY()
 	imin = h.bin[0]
