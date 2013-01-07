@@ -48,29 +48,3 @@ func NewHistogram(Range []float64) (*Histogram, error) {
 
 	return &h, nil
 }
-
-func NewHistogramInt(Range []int) (*HistogramInt, error) {
-	var h HistogramInt
-	n := len(Range) - 1
-
-	// check arguments 
-	if n <= 0 {
-		return nil, errors.New("histogram length n must be positive integer")
-	}
-
-	// check ranges 
-	for i := 0; i < n; i++ {
-		if Range[i] >= Range[i+1] {
-			return nil, errors.New("Histogram range must be in increasing order")
-		}
-	}
-
-	// Allocate histogram  
-	h.range_ = make([]int, n+1)
-	h.bin = make([]int, n)
-
-	// initialize Ranges 
-	copy(h.range_, Range)
-
-	return &h, nil
-}

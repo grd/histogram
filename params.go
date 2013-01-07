@@ -23,8 +23,3 @@ package histogram
 func (h *Histogram) Len() int {
 	return len(h.bin)
 }
-
-// Len returns the number of bins
-func (h *HistogramInt) Len() int {
-	return len(h.bin)
-}

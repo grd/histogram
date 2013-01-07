@@ -25,33 +25,17 @@ import (
 
 var errRange = "Value out of range. %v <> [%v..%v]"
 
-func find(Range []float64, x float64) (res int, err error) {
-	n := len(Range) - 1
+func find(slice []float64, x float64) (res int, err error) {
+	n := len(slice) - 1
 
 	res = -1
-	for i := range Range {
-		if x >= Range[i] {
+	for i := range slice {
+		if x >= slice[i] {
 			res = i
 		}
 	}
 	if res < 0 || res == n {
-		err = fmt.Errorf(errRange, x, Range[0], Range[n])
-	}
-
-	return
-}
-
-func findInt(Range []int, x int) (res int, err error) {
-	n := len(Range) - 1
-
-	res = -1
-	for i := range Range {
-		if x >= Range[i] {
-			res = i
-		}
-	}
-	if res < 0 || res == n {
-		err = fmt.Errorf(errRange, x, Range[0], Range[n])
+		err = fmt.Errorf(errRange, x, slice[0], slice[n])
 	}
 
 	return

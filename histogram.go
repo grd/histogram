@@ -24,11 +24,6 @@ type Histogram struct {
 	bin    []int
 }
 
-type HistogramInt struct {
-	range_ []int
-	bin    []int
-}
-
 // Probability distribution function
 type Pdf struct {
 	range_ []float64

@@ -30,15 +30,3 @@ func (h *Histogram) Add(x float64) error {
 
 	return nil
 }
-
-func (h *HistogramInt) Add(x int) error {
-	index, err := findInt(h.range_, x)
-
-	if err != nil {
-		return err
-	}
-
-	h.bin[index] += 1
-
-	return nil
-}

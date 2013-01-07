@@ -43,27 +43,3 @@ func (h *Histogram) Min() (min, imin int) {
 	}
 	return
 }
-
-// Max finds first value and index of max contents in bins
-func (h *HistogramInt) Max() (max, imax int) {
-	max = h.bin[0]
-	for i := range h.bin {
-		if h.bin[i] > max {
-			max = h.bin[i]
-			imax = i
-		}
-	}
-	return
-}
-
-// Min finds first value and index of min contents in bins
-func (h *HistogramInt) Min() (min, imin int) {
-	min = h.bin[0]
-	for i := range h.bin {
-		if h.bin[i] < min {
-			min = h.bin[i]
-			imin = i
-		}
-	}
-	return
-}

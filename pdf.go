@@ -23,7 +23,7 @@ import (
 	"errors"
 )
 
-func (p *Pdf) Sample(r float64) (float64, error) {
+func (p *Pdf) Sample(r float64) (res float64, err error) {
 
 	// Wrap the exclusive top of the bin down to the inclusive bottom of the bin. 
 	// Since this is a single point it should not affect the distribution.
@@ -32,16 +32,14 @@ func (p *Pdf) Sample(r float64) (float64, error) {
 		r = 0.0
 	}
 
-	i, err := find(p.sum, r)
-
-	if err != nil {
-		return 0.0, err
+	var i int
+	if i, err = find(p.sum, r); err != nil {
+		return
 	}
 
 	delta := (r - p.sum[i]) / (p.sum[i+1] - p.sum[i])
-	x := p.range_[i] + delta*(p.range_[i+1]-p.range_[i])
-
-	return x, nil
+	res = p.range_[i] + delta*(p.range_[i+1]-p.range_[i])
+	return
 }
 
 func NewPdf(h *Histogram) (*Pdf, error) {

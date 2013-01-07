@@ -29,11 +29,8 @@ const N = 397
 const NR = 10
 
 func Test_1d(t *testing.T) {
-	xr := []float64{0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
-	nr := make([]float64, N+1)
-	for i := range nr {
-		nr[i] = float64(i)
-	}
+	xr := NaturalRange(0, NR, 1)
+	nr := NaturalRange(0, N, 1)
 
 	h, err := NewHistogram(nr)
 	if err != nil {
@@ -241,13 +238,35 @@ func Test_1d(t *testing.T) {
 	*/
 }
 
-func Test_1d_resample(t *testing.T) {
-	hs := make([]float64, 11)
-	for i := range hs {
-		hs[i] = float64(i) * 0.1
+func Test_1d_String(t *testing.T) {
+	// generates histogram with range [0-10, 10-20, 20-30].
+	h, err := NewHistogram(Range(0, 3, 10))
+	if err != nil {
+		t.Error(err)
 	}
 
-	h, err := NewHistogram(hs)
+	h.Add(5)
+	h.Add(10)
+	h.Add(15)
+	h.Add(25)
+
+	orgString := FormatString
+	FormatString = IntString
+	fstring := `0 10 1
+10 20 2
+20 30 1
+`
+
+	if fmt.Sprint(h) != fstring {
+		t.Errorf("Histogram String function output incorrect")
+	}
+
+	// restoring original format string
+	FormatString = orgString
+}
+
+func Test_1d_resample(t *testing.T) {
+	h, err := NewHistogram(Range(0.0, 10, 0.1))
 	if err != nil {
 		t.Error(err)
 	}
@@ -255,9 +274,9 @@ func Test_1d_resample(t *testing.T) {
 	h.Add(0.1)
 	h.Add(0.2)
 	h.Add(0.2)
-	h.Add(0.31)
+	h.Add(0.3)
 
-	fmt.Println(h)
+	//	fmt.Println(h)
 
 	hhs := make([]float64, 101)
 	for i := range hhs {

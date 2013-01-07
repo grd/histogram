@@ -33,18 +33,3 @@ func (h *Histogram) GetRange(i int) (lower, upper float64) {
 func (h *Histogram) Find(x float64) (int, error) {
 	return find(h.range_, x)
 }
-
-func (h *HistogramInt) Get(i int) int {
-	return h.bin[i]
-}
-
-func (h *HistogramInt) GetRange(i int) (lower, upper int) {
-	lower = h.range_[i]
-	upper = h.range_[i+1]
-
-	return
-}
-
-func (h *HistogramInt) Find(x int) (int, error) {
-	return findInt(h.range_, x)
-}

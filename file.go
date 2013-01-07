@@ -23,21 +23,15 @@ import (
 	"fmt"
 )
 
+// Use IntString for the variable FormatString with ints.
+const IntString = "%.0f %.0f %d\n"
+
 // FormatString is used by the String and Scan functions for data parsing.
 // If you want a different output, just modify the variable.
-var FormatString = "%v %v %v\n"
+var FormatString = "%f %f %v\n"
 
 // String uses the variabele FormatString for the data parsing
 func (h *Histogram) String() (res string) {
-	for i := range h.bin {
-		str := fmt.Sprintf(FormatString, h.range_[i], h.range_[i+1], h.bin[i])
-		res += str
-	}
-	return
-}
-
-// String uses the variabele FormatString for the data parsing
-func (h *HistogramInt) String() (res string) {
 	for i := range h.bin {
 		str := fmt.Sprintf(FormatString, h.range_[i], h.range_[i+1], h.bin[i])
 		res += str
